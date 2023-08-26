@@ -1,0 +1,9 @@
+# Este archivo solo debes importarlo si quieres implementar React
+# Para eso necesitas hacer la build del proyecto y desplegar los archivos de la carpeta 'dist' o 'build' donde se encuentra este archivo
+
+RewriteEngine On
+
+# Si la solicitud no es un archivo ni un directorio existente, redirige al index.html de React
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
