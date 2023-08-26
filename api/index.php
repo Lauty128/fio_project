@@ -5,28 +5,28 @@
     #**************** ENDPOINTS ***********************
 
     # --- Obtener todos los proveedores
-    Flight::route('/proveedor', function(){
-        echo 'Hello world from Proveedor';
+    Flight::route('/proveedores', function(){
+        echo 'Hola mundo desde "Proveedores"';
     });
     
     # --- Obtener un proveedor
-    Flight::route('/proveedor/@id', function($id){
-        echo 'Hello world from Proveedor ('.$id.')';
+    Flight::route('/proveedores/@id', function($id){
+        echo 'Hola mundo desde "Proveedores" ('.$id.')';
     });
     
     # --- Obtener todos los equipos
     Flight::route('/equipos', function(){
-        echo 'Hello world from Equipo';
+        echo 'Hola mundo desde "Equipos"';
     });
     
     # --- Obtener un equipo
     Flight::route('/equipos/@id', function($id){
-        echo 'Hello world from Equipo ('.$id.')';
+        echo 'Hola mundo desde "Equipos" ('.$id.')';
     });
     
     # --- Obtener todas las categorias
     Flight::route('/categorias', function(){
-        echo 'Hello world from Categorias';
+        echo 'Hola mundo desde "Categorias"';
     });
     
     #************************************************
