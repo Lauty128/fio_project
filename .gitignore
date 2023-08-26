@@ -1,5 +1,7 @@
 # folders
 client
-api/testing
+assets
 
 # files
+index.html
+vite.svg
