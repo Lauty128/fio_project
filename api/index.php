@@ -8,6 +8,14 @@
     # ------------ Importar los controladores
     require 'controller/proveedores.controller.php';
     
+    
+    # ----------- CONFIGURAR CORS
+    // Specify domains from which requests are allowed
+    header('Access-Control-Allow-Origin: *');
+    // Specify which request methods are allowed
+    header('Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS');
+    // Additional headers which may be sent along with the CORS request
+    header('Access-Control-Allow-Headers: X-Requested-With,Authorization,Content-Type');
 
     #******************* ENDPOINTS **************************
     # --- Obtener todos los proveedores
