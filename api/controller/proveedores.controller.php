@@ -46,22 +46,26 @@
         {            
             $provider = ProveedoresModel::getOne($id);
             
+            # Si la variable $provider devuelve un error de mensaje, lo devolvemos y cortamos la funcion
             if(isset($provider['Error'])){
                 return $provider;
             }
 
-
+            # Si existe el proveedor ejecutamos el siguiente codigo
             if(count($provider) == 1){
                 $equipments = ProveedoresModel::getEquipments($id);
 
+                # Devolvemos un objeto con los datos del proveeedor y con una propiedad llamada equipos
+                # que contiene un array con todos los equipos que vende el proveedor
                 return [
                     ...$provider[0],
                     "equipos" => $equipments
                 ];
             }
             else{
+                # Si no existe el proveedor devolvemos el siguiente mensaje
                 return [
-                    "Error"=>000,
+                    "Error"=>400,
                     "Message"=>"No existe el proveedor buscado"
                 ];
             }
