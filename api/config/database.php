@@ -1,6 +1,4 @@
-<?php 
-    # Importar variables
-    require_once 'config/variables.php';
+<?php
 
     class Database{
         
