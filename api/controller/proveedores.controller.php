@@ -5,8 +5,15 @@
 
     class ProveedoresController{
     
-        static function getAll(int $page, int $limit, bool $equipments)
+        static function getAll()
         {
+            //---------- Detectar queries
+            # Si existen los parametros toman su valor, sino el valor por defecto en las configuraciones
+            $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : constant('PAGE');
+            $limit = (isset($_GET['limit'])) ? $_GET['limit'] : constant('LIMIT');
+            $equipments = (isset($_GET['equipos']) && $_GET['equipos'] == '1');
+
+            //---------- Manipular queries
             # Obtenemos el offset multiplicando la $page por el $limit
             $offset = $page * $limit;
 
@@ -15,11 +22,16 @@
             
             # Retornamos el valor para usarlo en index.php
             return $data;
-            
         }
         
-        static function getEquipments(int $id, int $page, int $limit)
+        static function getEquipments(int $id)
         {
+            //---------- Detectar queries
+            # Si existen los parametros toman su valor, sino el valor por defecto en las configuraciones
+            $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : constant('PAGE');
+            $limit = (isset($_GET['limit'])) ? $_GET['limit'] : constant('LIMIT_SMALL');
+
+            //---------- Manipular queries
             # Obtenemos el offset multiplicando la $page por el $limit
             $offset = $page * $limit;
 

@@ -19,41 +19,21 @@
 
     #******************* ENDPOINTS **************************
     # --- Obtener todos los proveedores
-   Flight::route('/proveedores', function()
-    {
-        # Si existe el parametro page,  entonces se usa ese valor, si no el definido en el archivo variables.php
-        $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : constant('PAGE');
-        # Si existe el parametro limit, entonces se usa ese valor, si no el definido en el archivo variables.php
-        $limit = (isset($_GET['limit'])) ? $_GET['limit'] : constant('LIMIT');
-        # Si existe el parametro limit, entonces se usa ese valor, si no el definido en el archivo variables.php
-        $equipments = (isset($_GET['equipos']) && $_GET['equipos'] == '1');
-    
-        # Almacenar el resultado de la funcion getAll() de la clase ProveedoresControllers en $data
-        $data = ProveedoresController::getAll($page, $limit, $equipments);
-        
-        # Ejecutar la funcion JSON de FlightPHP para devolver un JSON formateado
-        Flight::json($data);
+   Flight::route('/proveedores', function(){
+        $response = ProveedoresController::getAll();
+        Flight::json($response);
     });
     
     # --- Obtener un proveedor
-    Flight::route('/proveedores/@id', function($id)
-    {
-        $data = ProveedoresController::getOne($id);
-
-        Flight::json($data);
+    Flight::route('/proveedores/@id', function($id){
+        $response = ProveedoresController::getOne($id);
+        Flight::json($response);
     });
 
     # --- Obtener un proveedor
-    Flight::route('/proveedores/@id/equipos', function($id)
-    {
-        # Si existe el parametro page,  entonces se usa ese valor, si no el definido en el archivo variables.php
-        $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : constant('PAGE');
-        # Si existe el parametro limit, entonces se usa ese valor, si no el definido en el archivo variables.php
-        $limit = (isset($_GET['limit'])) ? $_GET['limit'] : constant('LIMIT_SMALL');
-
-        $data = ProveedoresController::getEquipments($id, $page, $limit);
-
-        Flight::json($data);
+    Flight::route('/proveedores/@id/equipos', function($id){
+        $response = ProveedoresController::getEquipments($id);
+        Flight::json($response);
     });
     
     # --- Obtener todos los equipos
