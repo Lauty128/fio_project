@@ -22,3 +22,4 @@
     define('PAGE', 0);
     define('LIMIT', 40);
     define('LIMIT_SMALL', 10);
+    define('ORDER', 'default');
