@@ -5,18 +5,21 @@ function defineQueryByOptionsForEquipments(array $options, string $refer = ''):s
     # Le agregamos el punto para ingresar a las propiedades del elemento referido
     if($refer != ''){ $refer .= '.'; }
 
-    if(isset($options['word'])){
+    if(isset($options['word']))
+    {
         $word = $options['word'];
         $sql = "WHERE ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
     }
 
-    if(isset($options['category'])){
+    if(isset($options['category']))
+    {
         $category = $options['category'];
         $sql = "WHERE ".$refer."cod_categoria = ".$category['value']."
             GROUP BY ".$refer."cod_equipo";
     }
 
-    if(isset($options['category'], $options['word'])){
+    if(isset($options['category'], $options['word']))
+    {
         $sql = "WHERE ".$refer."cod_categoria = ".$category['value']." 
             AND ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'
             GROUP BY ".$refer."cod_equipo";
@@ -27,10 +30,47 @@ function defineQueryByOptionsForEquipments(array $options, string $refer = ''):s
 
 function defineQueryByOptionsForProviders(array $options, string $refer = ''):string
 {
-    return '';
+    # Le agregamos el punto para ingresar a las propiedades del elemento referido
+    if($refer != ''){ $refer .= '.'; }
+
+    # Si existe category o equipments agregamos la conexion con la tabla <proveedor_equipo>
+    $originalSql = (isset($options['equipments']) || isset($options['category'])) ? 'JOIN proveedor_equipo pe ON pe.cod_proveedor = '.$refer.'cod_proveedor ' : '';
+
+    #-------------- WORD OPTION
+    if(isset($options['word']))
+    {
+        $word = $options['word'];
+        $sql = "WHERE ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
+    }
+
+    #-------------- CATEGORY OPTION
+    if(isset($options['category']))
+    {
+        $category = $options['category'];
+        $sql = "JOIN equipo e ON pe.cod_equipo = e.cod_equipo 
+            WHERE e.cod_categoria = ".$category['value'];
+    }
+
+    #-------------- WORD AND CATEGORY OPTION
+    if(isset($options['category'], $options['word']))
+    {
+        # Si los dos existen las variables $category y $word ya estaran definidas dentro de los if anteriores 
+
+        $sql = "JOIN equipo e ON pe.cod_equipo = e.cod_equipo 
+            WHERE e.cod_categoria = ".$category['value']."
+            AND ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
+    }
+
+    # Unimos la consulta inicial con alguna de las correspondientes;
+    $originalSql .= $sql;
+
+    # Los datos seran agrupados si existe el filtro categoria o equipos, con el fin de no repetir los registros
+    if(isset($options['equipments']) || isset($options['category'])){
+        $originalSql .= " GROUP BY ".$refer."cod_proveedor";
+    }
+
+    return $originalSql;
 }
-
-
 
 function defineOrder(string $name):string | null
 {
@@ -46,15 +86,3 @@ function defineOrder(string $name):string | null
 
     return $orderTypes[$name];
 }
-
-
-# OBTENER PROVEEDORES FILTRADOS POR UNA CATEGORIA MAS EL TOTAL DE PRODUCTOS DE ESA CATEGORIA QUE VENDEN
-                //SELECT p.cod_proveedor, p.nombre, COUNT(pe.cod_equipo) as cantidad FROM proveedor p
-                //JOIN proveedor_equipo pe ON pe.cod_proveedor = p.cod_proveedor
-                //JOIN equipo e ON e.cod_equipo = pe.cod_equipo
-                //WHERE e.cod_categoria = 2
-                //GROUP BY p.cod_proveedor; 
-
-                # FILTRAR PROVEEDORES POR SU NOMBRE
-                //SELECT * FROM proveedor
-                //WHERE nombre COLLATE utf8mb4_unicode_ci LIKE '%:word%';

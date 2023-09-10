@@ -18,6 +18,11 @@ function formaterOptions(array $options):array | null
                     "type" => 'equal'
                 ];
             break;
+            case 'equipments':
+                if($option == 'true'){
+                    $newOptions[$key] = 1;
+                }
+            break;
         }
     }
 
