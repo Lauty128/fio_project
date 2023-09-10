@@ -5,42 +5,57 @@
     # ------------ Importar variables
     require_once 'config/app.php';
 
-    # ------------ Importar los controladores
-    require 'controller/proveedores.controller.php';
+    #------------- BD PDO
+    $PDO; 
     
-
     #******************* ENDPOINTS **************************
     # --- Obtener todos los proveedores
-   Flight::route('/proveedores', function(){
-        $response = ProveedoresController::getAll();
+    Flight::route('/providers', function(){
+        require 'controller/providers.controller.php';
+        $response = ProvidersController::getAll();
         Flight::json($response);
     });
     
     # --- Obtener un proveedor
-    Flight::route('/proveedores/@id', function($id){
-        $response = ProveedoresController::getOne($id);
+    Flight::route('/providers/@id', function($id){
+        require 'controller/providers.controller.php';
+        $response = ProvidersController::getOne($id);
         Flight::json($response);
     });
 
-    # --- Obtener un proveedor
-    Flight::route('/proveedores/@id/equipos', function($id){
-        $response = ProveedoresController::getEquipments($id);
+    # --- Obtener los equipos vendidos por un proveedor
+    Flight::route('/providers/@id/equipos', function($id){
+        require 'controller/providers.controller.php';
+        $response = ProvidersController::getEquipments($id);
         Flight::json($response);
     });
     
     # --- Obtener todos los equipos
-    Flight::route('/equipos', function(){
-        echo 'Hola mundo desde "Equipos"';
+    Flight::route('/equipments', function(){
+        require 'controller/equipments.controller.php';
+        $response = EquipmentsController::getAll();
+        Flight :: json($response);
     });
     
     # --- Obtener un equipo
-    Flight::route('/equipos/@id', function($id){
-        echo 'Hola mundo desde "Equipos" ('.$id.')';
+    Flight::route('/equipments/@id', function($id){
+        require 'controller/equipments.controller.php';
+        $response = EquipmentsController::getOne($id);
+        Flight::json($response);
     });
-    
+
+    # --- Obtener los proveedores que venden un equipo
+    Flight::route('/equipments/@id/proveedores', function($id){
+        require 'controller/equipments.controller.php';
+        $response = EquipmentsController::getProviders($id);
+        Flight::json($response);
+    });
+
     # --- Obtener todas las categorias
-    Flight::route('/categorias', function(){
-        echo 'Hola mundo desde "Categorias"';
+    Flight::route('/categories', function(){
+        require 'controller/categories.controller.php';
+        $response = CategoriesController::getAll();
+        Flight::json($response);
     });
     
     #************************************************
