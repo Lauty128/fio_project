@@ -15,7 +15,7 @@
     define('DB_SERVER','localhost');
     define('DB_NAME','fio_project');
     define('DB_USER','root');
-    define('DB_PASSWORD','');
+    define('DB_PASSWORD','12052003');
 
 //------ DEFAULT VALUES
     #Aqui definimos los valores por defecto que tomaremos en el codigo
@@ -23,3 +23,6 @@
     define('LIMIT', 40);
     define('LIMIT_SMALL', 10);
     define('ORDER', 'default');
+
+//------ CONJUNTO DE DATOS
+    define('ORDER_TYPES', ['N-ASC','N-DESC','default']);
