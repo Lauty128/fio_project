@@ -22,8 +22,8 @@
                 $order = (isset($_GET['order'])) ? formaterOrder($_GET['order']) : constant('ORDER');
                 
                 # Formateamos las opciones de busqueda recibidas por parametro
-                $options = formaterOptions($_GET ?? []);
-                
+                $options = formaterOptionsForProviders($_GET ?? []);
+                //var_dump($options); exit();
                 # Obtenemos el offset multiplicando la $page por el $limit
                 $offset = $page * $limit;
                 

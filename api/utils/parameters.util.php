@@ -1,35 +1,65 @@
 <?php
 
-function formaterOptions(array $options):array | null
+function formaterOptionsForEquipments(array $options):array | null
 {
+    if(count($options) == 0){ return null; }
+
     $newOptions = [];
 
-    foreach ($options as $key => $option){
-        switch ($key) {
+    foreach($options as $key => $value){
+        switch ($key){
             case 'word':
-               $newOptions[$key] = [
-                    "value" => $option,
-                    "type" => 'collate'
+                $newOptions[$key] = [
+                    'table' => "e.nombre",
+                    'value' => "'%".$value."%'",
+                    'equal' => 'COLLATE utf8mb4_unicode_ci LIKE'
                 ];
             break;
             case 'category':
                 $newOptions[$key] = [
-                    "value" => $option,
-                    "type" => 'equal'
+                    'table' => 'e.cod_categoria',
+                    'value' => $value,
+                    'equal' => '='
                 ];
-            break;
-            case 'equipments':
-                if($option == 'true'){
-                    $newOptions[$key] = 1;
-                }
             break;
         }
     }
 
-    if(count($newOptions) == 0){
-        return null;
+    if(count($newOptions) == 0){ return null; }
+    return $newOptions;
+}
+
+function formaterOptionsForProviders(array $options):array | null
+{
+    if(count($options) == 0){ return null; }
+
+    $newOptions = [];
+
+    foreach($options as $key => $value){
+        switch ($key){
+            case 'word':
+                $newOptions[$key] = [
+                    'table' => "p.nombre",
+                    'value' => "'%".$value."%'",
+                    'equal' => 'COLLATE utf8mb4_unicode_ci LIKE'
+                ];
+            break;
+            case 'equipments':
+                if($value == 'true'){
+                    $newOptions[$key] = true;
+                }
+            break;
+            case 'category':
+                $newOptions[$key] = [
+                    'table' => 'e.cod_categoria',
+                    'value' => $value,
+                    'equal' => '='
+                ];
+            break;
+        }
     }
 
+    if(count($newOptions) == 0){ return null; }
     return $newOptions;
 }
 

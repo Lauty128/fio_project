@@ -1,32 +1,35 @@
 <?php
 
-function defineQueryByOptionsForEquipments(array $options, string $refer = ''):string
+function getWhere(array $options) : string
 {
-    # Le agregamos el punto para ingresar a las propiedades del elemento referido
-    if($refer != ''){ $refer .= '.'; }
+    $where = '';
 
-    if(isset($options['word']))
-    {
-        $word = $options['word'];
-        $sql = "WHERE ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
+    if(isset($options['equipments'])){
+        $options = array_filter($options, function($key){
+            $possibleOptions = ['word','category'];
+            return in_array($key, $possibleOptions);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+    
+    if(count($options) > 0){ $index = 0; }
+
+    foreach ($options as $option) {
+            # If this position is equal to 0(zero), then a 'WHERE' is added
+            if($index == 0){ $where .= "WHERE "; }
+            
+            $where .= $option['table']." ".$option['equal']." ".$option['value'];
+            
+            # If this position isn't the last, then an 'AND' is added
+            if($index < (count($options) - 1)){ $where .= " AND "; }  
+            
+            # Index is equal to index + 1
+            $index++;
     }
 
-    if(isset($options['category']))
-    {
-        $category = $options['category'];
-        $sql = "WHERE ".$refer."cod_categoria = ".$category['value']."
-            GROUP BY ".$refer."cod_equipo";
-    }
-
-    if(isset($options['category'], $options['word']))
-    {
-        $sql = "WHERE ".$refer."cod_categoria = ".$category['value']." 
-            AND ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'
-            GROUP BY ".$refer."cod_equipo";
-    }
-
-    return $sql;
-}
+    //var_dump($where);
+    //exit();
+    return $where;
+}   
 
 function defineQueryByOptionsForProviders(array $options, string $refer = ''):string
 {

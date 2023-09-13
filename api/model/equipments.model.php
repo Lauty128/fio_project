@@ -26,7 +26,7 @@
                     
                     # Crear variaciones en base a las opciones
                     if($options != null){
-                        $sql .= ' '.defineQueryByOptionsForEquipments($options, 'e');
+                        $sql .= ' '.getWhere($options);
                     }
 
                     # Ordenar con los datos recibidos

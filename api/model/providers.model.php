@@ -21,18 +21,36 @@
                 #------------------- CREAR QUERY
                     # Creamos la query con los parametros recibidos
                     $sql = (isset($options['equipments']))
+                        # Si existe el filtro de equipos agregamos un campo mas a mostrar y un JOIN a la tabla proveedor_equipo
                         ? 'SELECT p.*, count(pe.cod_proveedor) as equipos
-                            FROM proveedor p'
+                            FROM proveedor p
+                            JOIN proveedor_equipo pe ON pe.cod_proveedor = p.cod_proveedor'
+                        # Si no existe hacemos un SELECT simple
                         :  'SELECT p.* FROM proveedor p';
+
+                    # SI existe el filtro de categoria y equipos solo agregamos el JOIN a la tabla equipo
+                    if(isset($options['category']) && isset($options['equipments'])){
+                        $sql .= " JOIN equipo e ON e.cod_equipo = pe.cod_equipo";
+                    }
+                    # Si no existe el filtro de equipos pero si el de categoria hcemos el JOIN a ambas tablas
+                    elseif(isset($options['category'])){
+                        $sql .= " JOIN proveedor_equipo pe ON pe.cod_proveedor = p.cod_proveedor
+                            JOIN equipo e ON e.cod_equipo = pe.cod_equipo";
+                    }
 
                     # Crear variaciones en base a las opciones
                     if($options != null){
-                        $sql .= ' '.defineQueryByOptionsForProviders($options, 'p');
+                        $sql .= ' '.getWhere($options);
                     }
 
                     # Ordenar con los datos recibidos
                     $sql .= ' '.defineOrder($order);
 
+                    # Si queremos obtener el total de equipamientos vendido debemos agrupar los resultados
+                    if(isset($options['equipments'])){
+                        $sql .= ' GROUP BY p.cod_proveedor';
+                    }
+                    
                     # Agregar la paginación
                     $sql .= ' LIMIT :limit OFFSET :offset';
                 //var_dump($sql);  exit();    
