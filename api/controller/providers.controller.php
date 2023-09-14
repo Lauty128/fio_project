@@ -15,7 +15,6 @@
                 # Si existen los parametros toman su valor, sino el valor por defecto en las configuraciones
                 $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : constant('PAGE');
                 $limit = (isset($_GET['limit'])) ? $_GET['limit'] : constant('LIMIT');
-                //$equipments = (isset($_GET['equipments']) && $_GET['equipos'] == '1');
 
             //------------- Manipular queries
                 # Definimos un orden por defecto o el recibido por los parametros
@@ -23,16 +22,36 @@
                 
                 # Formateamos las opciones de busqueda recibidas por parametro
                 $options = formaterOptionsForProviders($_GET ?? []);
-                //var_dump($options); exit();
+                
                 # Obtenemos el offset multiplicando la $page por el $limit
                 $offset = $page * $limit;
                 
             //-------------- Enviar variables para ejecutar la consulta
-                # Almacenamos el resultado de la funcion getAll() mandando los parametros que pide
-                $data = ProvidersModel::getAll($offset, $limit, $order, $options);
-                # Retornamos el valor para usarlo en index.php
-                return $data;
+            //ProvidersModel::getTotal($options);
+            
+                $providers = ProvidersModel::getAll($offset, $limit, $order, $options);
+                # Si la cantidad de elementos es menor al limite o igual a cero, no se consulta en la base de datos el total de elementos
+                $total = ((count($providers) < $limit) && $page == 0)
+                    ? count($providers)
+                    : ProvidersModel::getTotal($options);
+            //var_dump($total); exit();
 
+                if(is_int($total) && !isset($provider['Error'])){
+                    return [
+                        'page' => ((int)$page + 1),
+                        'limit' => (int)$limit,
+                        'hasNextPage' => ((($page + 1) * $limit) < $total),
+                        'hasPrevPage' => (($page - 1) >= 0),
+                        'total' => (int)$total,
+                        'data' => $providers
+                    ];
+                }
+                else{
+                    return [
+                        'Error' => 500,
+                        'Message' => 'An error was detected'
+                    ];
+                }
         }
 
         static function getEquipments(int $id)

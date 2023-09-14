@@ -23,16 +23,38 @@
                 
                 # Formateamos las opciones de busqueda recibidas por parametro
                 $options = formaterOptionsForEquipments($_GET ?? []);
-                
+                // var_dump($options); exit();
                 # Obtenemos el offset multiplicando la $page por el $limit
                 $offset = $page * $limit;
             
             //-------------- Enviar variables para ejecutar la consulta
                 # Almacenamos el resultado de la funcion getAll() mandando los parametros que pide
-                $data = EquipmentsModel::getAll($offset, $limit, $order , $options);
+                $equipments = EquipmentsModel::getAll($offset, $limit, $order, $options);
+
+                # Si la cantidad de elementos es menor al limite o igual a cero, no se consulta en la base de datos el total de elementos
+                $total = ((count($equipments) < $limit) && $page == 0)
+                    ? count($equipments)
+                    : EquipmentsModel::getTotal($options);
                 
-                # Retornamos el valor para usarlo en index.php
-                return $data;
+                if(is_int($total) && !isset($provider['Error'])){
+                    return [
+                        'page' => ((int)$page + 1),
+                        'limit' => (int)$limit,
+                        'hasNextPage' => ((($page + 1) * $limit) < $total),
+                        'hasPrevPage' => (($page - 1) >= 0),
+                        'total' => (int)$total,
+                        'data' => $equipments
+                    ];
+                }
+                else{
+                    return [
+                        'Error' => 500,
+                        'Message' => 'An error was detected'
+                    ];
+                }
+
+                //return $data;
+                
         }
 
         static function getProviders(int $id)

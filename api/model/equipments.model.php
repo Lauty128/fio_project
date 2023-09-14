@@ -10,6 +10,48 @@
     #--------------------------------------------------------------------
 
     class EquipmentsModel{ 
+
+        static function getTotal(null | array $options):int | array
+        {
+            # Call to the global variable $PDO
+            global $PDO;
+
+            # if $PDO is of type PDO, the following code will be executed
+            if($PDO instanceof PDO){
+
+                $sql = 'SELECT COUNT(e.cod_equipo) as total FROM equipo e';
+                 # Crear variaciones en base a las opciones
+
+                if(isset($options['category'])){
+                    $sql .= ' JOIN categoria c ON e.cod_categoria = c.cod_categoria';
+                }
+
+                if($options != null){
+                    $sql .= ' '.getWhere($options);
+                }
+                //var_dump($sql); exit();
+                # Create query and execute
+                $query = $PDO->prepare($sql);
+
+                $query->execute();
+
+
+                # Get the response of the 'total' field
+                $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
+
+                # return response
+                return $response;
+            }
+            # if $PDO is of type PDOException, the following code will be executed
+            else if($PDO instanceof PDOException){
+                return [
+                    'Error'=>500,
+                    'Message'=>'Ocurrio un error al conectarse a la base de datos',
+                    'Error-Message' => $PDO->getMessage()
+                ];
+            }
+        }
+
         
         static function getAll($offset, $limit, $order, array | null $options)
         {
@@ -34,7 +76,7 @@
                     
                     # Agregar la paginación
                     $sql .= ' LIMIT :limit OFFSET :offset';
-                
+                    //var_dump($sql); exit();
                 #-------------------- PREPARAR Y EJECUTAR CONSULTA
                     # Preparamos la query con el string generado
                     $query = $PDO->prepare($sql);
