@@ -24,7 +24,7 @@
     });
 
     # --- Obtener los equipos vendidos por un proveedor
-    Flight::route('/providers/@id/equipos', function($id){
+    Flight::route('/providers/@id/equipments', function($id){
         require 'controller/providers.controller.php';
         $response = ProvidersController::getEquipments($id);
         Flight::json($response);
@@ -45,7 +45,7 @@
     });
 
     # --- Obtener los proveedores que venden un equipo
-    Flight::route('/equipments/@id/proveedores', function($id){
+    Flight::route('/equipments/@id/providers', function($id){
         require 'controller/equipments.controller.php';
         $response = EquipmentsController::getProviders($id);
         Flight::json($response);
