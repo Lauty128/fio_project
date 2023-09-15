@@ -57,6 +57,13 @@
         $response = CategoriesController::getAll();
         Flight::json($response);
     });
+
+    # --- Obtener todas las categorias de equipos que vende un proveedor
+    Flight::route('/categories/@id', function($id){
+        require 'controller/categories.controller.php';
+        $response = CategoriesController::getAllByProviders($id);
+        Flight::json($response);
+    });
     
     #************************************************
 
