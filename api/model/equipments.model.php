@@ -4,9 +4,11 @@
     global $PDO;
 
     #----- BD CONNECTION
-    require 'config/database.php';
-    $database = new Database();
-    $PDO = $database->connect();
+    if(!$PDO){
+        require 'config/database.php';
+        $database = new Database();
+        $PDO = $database->connect();
+    }
     #--------------------------------------------------------------------
 
     class EquipmentsModel{ 
