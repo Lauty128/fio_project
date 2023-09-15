@@ -66,10 +66,30 @@
             $offset = $page * $limit;
 
             # Almacenamos el resultado de la funcion getEquipments() mandando los parametros que pide
-            $response = ProvidersModel::getEquipments($id, $offset, $limit);
+            $equipments = ProvidersModel::getEquipments($id, $offset, $limit);
+
+            # Si la cantidad de elementos es menor al limite o igual a cero, no se consulta en la base de datos el total de elementos
+            $total = ((count($equipments) < $limit) && $page == 0)
+            ? count($equipments)
+            : ProvidersModel::getTotalByEquipments($id);
 
             # Retornamos el valor para usarlo en index.php
-            return $response;
+            if(is_int($total) && !isset($equipments['Error'])){
+                return [
+                    'page' => ((int)$page + 1),
+                    'limit' => (int)$limit,
+                    'hasNextPage' => ((($page + 1) * $limit) < $total),
+                    'hasPrevPage' => (($page - 1) >= 0),
+                    'total' => (int)$total,
+                    'data' => $equipments
+                ];
+            }
+            else{
+                return [
+                    'Error' => 500,
+                    'Message' => 'An error was detected'
+                ];
+            }
         }
 
         static function getOne(int $id)
@@ -83,15 +103,9 @@
 
             # Si existe el proveedor ejecutamos el siguiente codigo
             if(count($provider) == 1){
-                $equipments = ProvidersModel::getEquipments($id);
-
                 # Devolvemos un objeto con los datos del proveeedor y con una propiedad llamada equipos
                 # que contiene un array con todos los equipos que vende el proveedor
-                return [
-                    // *ACTUALIZAR PHP PARA HACER ESTO*
-                    ...$provider[0],
-                    "equipos" => $equipments
-                ];
+                return $provider[0];
             }
             else{
                 # Si no existe el proveedor devolvemos el siguiente mensaje

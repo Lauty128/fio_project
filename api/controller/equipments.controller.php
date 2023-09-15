@@ -70,10 +70,30 @@
             
             //-------------- Enviar variables para ejecutar la consulta
                 # Almacenamos el resultado de la funcion getEquipments() mandando los parametros que pide
-                $response = EquipmentsModel::getProviders($id, $offset, $limit);
+                $providers = EquipmentsModel::getProviders($id, $offset, $limit);
+
+                # Si la cantidad de elementos es menor al limite o igual a cero, no se consulta en la base de datos el total de elementos
+                $total = ((count($providers) < $limit) && $page == 0)
+                    ? count($providers)
+                    : EquipmentsModel::getTotalByProviders($id);
 
                 # Retornamos el valor para usarlo en index.php
-                return $response;
+                if(is_int($total) && !isset($providers['Error'])){
+                    return [
+                        'page' => ((int)$page + 1),
+                        'limit' => (int)$limit,
+                        'hasNextPage' => ((($page + 1) * $limit) < $total),
+                        'hasPrevPage' => (($page - 1) >= 0),
+                        'total' => (int)$total,
+                        'data' => $providers
+                    ];
+                }
+                else{
+                    return [
+                        'Error' => 500,
+                        'Message' => 'An error was detected'
+                    ];
+                }
         }
 
         static function getOne(int $id)

@@ -11,6 +11,43 @@
 
     class EquipmentsModel{ 
 
+        static function getTotalByProviders(string $id):int | array
+        {
+            # Call to the global variable $PDO
+            global $PDO;
+
+            # if $PDO is of type PDO, the following code will be executed
+            if($PDO instanceof PDO){
+
+                $sql = 'SELECT COUNT(pe.cod_equipo) as total FROM equipo e
+                JOIN proveedor_equipo pe ON e.cod_equipo = pe.cod_equipo
+                WHERE pe.cod_equipo = :id';
+
+                # Prepare query
+                $query = $PDO->prepare($sql);
+                
+                # Bind parameters
+                $query->bindParam(':id', $id);
+
+                # Execute query
+                $query->execute();
+
+                # Get the response of the 'total' field
+                $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
+
+                # return response
+                return $response;
+            }
+            # if $PDO is of type PDOException, the following code will be executed
+            else if($PDO instanceof PDOException){
+                return [
+                    'Error'=>500,
+                    'Message'=>'Ocurrio un error al conectarse a la base de datos',
+                    'Error-Message' => $PDO->getMessage()
+                ];
+            }
+        }
+
         static function getTotal(null | array $options):int | array
         {
             # Call to the global variable $PDO
