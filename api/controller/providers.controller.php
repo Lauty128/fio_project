@@ -5,6 +5,7 @@
     require 'utils/parameters.util.php';
 
     #---- Importar modelos
+    require 'model/categories.model.php';
     require 'model/providers.model.php';
 
     class ProvidersController{
@@ -103,9 +104,13 @@
 
             # Si existe el proveedor ejecutamos el siguiente codigo
             if(count($provider) == 1){
+                $categories = CategoriesModel::getAllByProvider($id);
                 # Devolvemos un objeto con los datos del proveeedor y con una propiedad llamada equipos
                 # que contiene un array con todos los equipos que vende el proveedor
-                return $provider[0];
+                return [
+                    ...$provider[0],
+                    'categories' => $categories
+                ];
             }
             else{
                 # Si no existe el proveedor devolvemos el siguiente mensaje
