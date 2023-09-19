@@ -21,9 +21,9 @@
             # if $PDO is of type PDO, the following code will be executed
             if($PDO instanceof PDO){
                 # Create query
-                $sql = 'SELECT COUNT(pe.cod_proveedor) as total FROM proveedor p
-                JOIN proveedor_equipo pe ON p.cod_proveedor = pe.cod_proveedor
-                WHERE pe.cod_proveedor = :id';
+                $sql = 'SELECT COUNT(pe.providerID) as total FROM provider p
+                JOIN provider_equipment pe ON p.providerID = pe.providerID
+                WHERE pe.providerID = :id';
 
                 # Prepare query
                 $query = $PDO->prepare($sql);
@@ -58,11 +58,11 @@
             # if $PDO is of type PDO, the following code will be executed
             if($PDO instanceof PDO){
                     # Create query
-                    $sql = 'SELECT COUNT(DISTINCT p.cod_proveedor) as total FROM proveedor p';
+                    $sql = 'SELECT COUNT(DISTINCT p.providerID) as total FROM provider p';
                     
                     if(isset($options['category'])){
-                        $sql .= ' INNER JOIN proveedor_equipo pe ON pe.cod_proveedor = p.cod_proveedor
-                        INNER JOIN equipo e ON pe.cod_equipo = e.cod_equipo';
+                        $sql .= ' INNER JOIN provider_equipment pe ON pe.providerID = p.providerID
+                        INNER JOIN equipment e ON pe.equipmentID = e.equipmentID';
                     }
 
                     if($options != null){
@@ -99,20 +99,20 @@
                     # Creamos la query con los parametros recibidos
                     $sql = (isset($options['equipments']))
                         # Si existe el filtro de equipos agregamos un campo mas a mostrar y un JOIN a la tabla proveedor_equipo
-                        ? 'SELECT DISTINCT p.*, count(pe.cod_proveedor) as equipos
-                            FROM proveedor p
-                            JOIN proveedor_equipo pe ON pe.cod_proveedor = p.cod_proveedor'
+                        ? 'SELECT DISTINCT p.*, count(pe.providerID) as equipment
+                            FROM provider p
+                            JOIN provider_equipment pe ON pe.providerID = p.providerID'
                         # Si no existe hacemos un SELECT simple
-                        :  'SELECT DISTINCT p.* FROM proveedor p';
+                        :  'SELECT DISTINCT p.* FROM provider p';
 
                     # SI existe el filtro de categoria y equipos solo agregamos el JOIN a la tabla equipo
                     if(isset($options['category']) && isset($options['equipments'])){
-                        $sql .= " JOIN equipo e ON e.cod_equipo = pe.cod_equipo";
+                        $sql .= " JOIN equipment e ON e.equipmentID = pe.equipmentID";
                     }
                     # Si no existe el filtro de equipos pero si el de categoria hcemos el JOIN a ambas tablas
                     elseif(isset($options['category'])){
-                        $sql .= " INNER JOIN proveedor_equipo pe ON pe.cod_proveedor = p.cod_proveedor
-                        INNER JOIN equipo e ON e.cod_equipo = pe.cod_equipo";
+                        $sql .= " INNER JOIN provider_equipment pe ON pe.providerID = p.providerID
+                        INNER JOIN equipment e ON e.equipmentID = pe.equipmentID";
                     }
 
                     # Crear variaciones en base a las opciones
@@ -125,7 +125,7 @@
 
                     # Si queremos obtener el total de equipamientos vendido debemos agrupar los resultados
                     if(isset($options['equipments'])){
-                        $sql .= ' GROUP BY p.cod_proveedor';
+                        $sql .= ' GROUP BY p.providerID';
                     }
 
                     # Agregar la paginación
@@ -163,11 +163,11 @@
             # Si $PDO no es un PDOException, enonces la conexion es correcta y ejecutamos lo siguiente
             if(get_class($PDO) !== 'PDOException'){
                     # Creamos la query con los parametros recibidos
-                    $sql="SELECT e.cod_equipo, e.nombre, e.cod_categoria,c.nombre as categoria
-                            FROM proveedor_equipo pe
-                            JOIN equipo e ON pe.cod_equipo = e.cod_equipo
-                            JOIN categoria c ON e.cod_categoria = c.cod_categoria
-                            WHERE pe.cod_proveedor = :id
+                    $sql="SELECT e.equipmentID, e.nombre, e.categoryID,c.nombre as categoria
+                            FROM provider_equipment pe
+                            JOIN equipment e ON pe.equipmentID = e.equipmentID
+                            JOIN category c ON e.categoryID = c.categoryID
+                            WHERE pe.providerID = :id
                             LIMIT :limit
                             OFFSET :offset ";
 
@@ -203,7 +203,7 @@
             # Si $PDO no es un PDOException, enonces la conexion es correcta y ejecutamos lo siguiente
             if(get_class($PDO) !== 'PDOException'){
                     # Creamos la query con los parametros recibidos
-                    $sql="SELECT * FROM proveedor WHERE cod_proveedor = :id";
+                    $sql="SELECT * FROM provider WHERE providerID = :id";
 
                     # Preparamos la query con el string generado
                     $query = $PDO->prepare($sql);

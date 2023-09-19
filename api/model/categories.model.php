@@ -21,7 +21,7 @@
             # Si $PDO no es un PDOException, enonces la conexion es correcta y ejecutamos lo siguiente
             if(get_class($PDO) !== 'PDOException'){
                 # Creamos la query con los parametros recibidos
-                $sql = 'SELECT * FROM categoria';
+                $sql = 'SELECT * FROM category';
             
                 # Preparamos la query con el string generado
                 $query = $PDO->query($sql);
@@ -49,11 +49,11 @@
             # Si $PDO no es un PDOException, enonces la conexion es correcta y ejecutamos lo siguiente
             if(get_class($PDO) !== 'PDOException'){
                 # Creamos la query con los parametros recibidos
-                $sql = 'SELECT DISTINCT c.cod_categoria,c.nombre FROM proveedor p
-                JOIN proveedor_equipo pe ON p.cod_proveedor = pe.cod_proveedor
-                JOIN equipo e ON e.cod_equipo = pe.cod_equipo
-                JOIN categoria c ON e.cod_categoria = c.cod_categoria
-                WHERE pe.cod_proveedor = :id';
+                $sql = 'SELECT DISTINCT c.categoryID,c.name FROM provider p
+                JOIN provider_equipment pe ON p.providerID = pe.providerID
+                JOIN equipment e ON e.equipmentID = pe.equipmentID
+                JOIN category c ON e.categoryID = c.categoryID
+                WHERE pe.providerID = :id';
 
                 # Preparamos la query con el string generado
                 $query = $PDO->prepare($sql);

@@ -21,9 +21,9 @@
             # if $PDO is of type PDO, the following code will be executed
             if($PDO instanceof PDO){
 
-                $sql = 'SELECT COUNT(pe.cod_equipo) as total FROM equipo e
-                JOIN proveedor_equipo pe ON e.cod_equipo = pe.cod_equipo
-                WHERE pe.cod_equipo = :id';
+                $sql = 'SELECT COUNT(pe.equipmentID) as total FROM equipment e
+                JOIN provider_equipment pe ON e.equipmentID = pe.equipmentID
+                WHERE pe.equipmentID = :id';
 
                 # Prepare query
                 $query = $PDO->prepare($sql);
@@ -58,11 +58,11 @@
             # if $PDO is of type PDO, the following code will be executed
             if($PDO instanceof PDO){
 
-                $sql = 'SELECT COUNT(e.cod_equipo) as total FROM equipo e';
+                $sql = 'SELECT COUNT(e.equipmentID) as total FROM equipment e';
                  # Crear variaciones en base a las opciones
 
                 if(isset($options['category'])){
-                    $sql .= ' JOIN categoria c ON e.cod_categoria = c.cod_categoria';
+                    $sql .= ' JOIN category c ON e.categoryID = c.categoryID';
                 }
 
                 if($options != null){
@@ -101,9 +101,9 @@
             if(get_class($PDO) !== 'PDOException'){
                 #------------------- CREAR QUERY
                     # Creamos la query con los parametros recibidos
-                    $sql = 'SELECT e.cod_equipo, e.nombre, e.cod_categoria, c.nombre as categoria 
-                        FROM equipo e
-                        JOIN categoria c ON e.cod_categoria = c.cod_categoria';
+                    $sql = 'SELECT e.equipmentID, e.name, e.categoryID, c.name as category 
+                        FROM equipment e
+                        JOIN category c ON e.categoryID = c.categoryID';
                     
                     # Crear variaciones en base a las opciones
                     if($options != null){
@@ -150,10 +150,10 @@
             # Si $PDO no es un PDOException, enonces la conexion es correcta y ejecutamos lo siguiente
             if(get_class($PDO) !== 'PDOException'){
                 # Creamos la query con los parametros recibidos
-                $sql="SELECT p.cod_proveedor, p.nombre 
-                        FROM proveedor_equipo pe
-                        JOIN proveedor p ON pe.cod_proveedor = p.cod_proveedor
-                        WHERE pe.cod_equipo = :id
+                $sql="SELECT p.providerID, p.name 
+                        FROM provider_equipment pe
+                        JOIN provider p ON pe.providerID = p.providerID
+                        WHERE pe.equipmentID = :id
                         LIMIT :limit
                         OFFSET :offset ";
 
@@ -192,8 +192,8 @@
             {
             # Creamos la query con los parametros recibidos
             $sql="SELECT *
-                    FROM equipo 
-                    WHERE cod_equipo = :id";
+                    FROM equipment 
+                    WHERE equipmentID = :id";
 
             # Preparamos la query con el string generado
             $query = $PDO->prepare($sql);

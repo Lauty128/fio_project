@@ -36,22 +36,22 @@ function defineQueryByOptionsForProviders(array $options, string $refer = ''):st
     # Le agregamos el punto para ingresar a las propiedades del elemento referido
     if($refer != ''){ $refer .= '.'; }
 
-    # Si existe category o equipments agregamos la conexion con la tabla <proveedor_equipo>
-    $originalSql = (isset($options['equipments']) || isset($options['category'])) ? 'JOIN proveedor_equipo pe ON pe.cod_proveedor = '.$refer.'cod_proveedor ' : '';
+    # Si existe category o equipments agregamos la conexion con la tabla <provider_equipment>
+    $originalSql = (isset($options['equipments']) || isset($options['category'])) ? 'JOIN provider_equipment pe ON pe.providerID = '.$refer.'providerID ' : '';
 
     #-------------- WORD OPTION
     if(isset($options['word']))
     {
         $word = $options['word'];
-        $sql = "WHERE ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
+        $sql = "WHERE ".$refer."name COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
     }
 
     #-------------- CATEGORY OPTION
     if(isset($options['category']))
     {
         $category = $options['category'];
-        $sql = "JOIN equipo e ON pe.cod_equipo = e.cod_equipo 
-            WHERE e.cod_categoria = ".$category['value'];
+        $sql = "JOIN equipment e ON pe.equipmentID = e.equipmentID 
+            WHERE e.categoryID = ".$category['value'];
     }
 
     #-------------- WORD AND CATEGORY OPTION
@@ -59,9 +59,9 @@ function defineQueryByOptionsForProviders(array $options, string $refer = ''):st
     {
         # Si los dos existen las variables $category y $word ya estaran definidas dentro de los if anteriores 
 
-        $sql = "JOIN equipo e ON pe.cod_equipo = e.cod_equipo 
-            WHERE e.cod_categoria = ".$category['value']."
-            AND ".$refer."nombre COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
+        $sql = "JOIN equipment e ON pe.equipmentID = e.equipmentID 
+            WHERE e.categoryID = ".$category['value']."
+            AND ".$refer."name COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
     }
 
     # Unimos la consulta inicial con alguna de las correspondientes;
@@ -69,7 +69,7 @@ function defineQueryByOptionsForProviders(array $options, string $refer = ''):st
 
     # Los datos seran agrupados si existe el filtro categoria o equipos, con el fin de no repetir los registros
     if(isset($options['equipments']) || isset($options['category'])){
-        $originalSql .= " GROUP BY ".$refer."cod_proveedor";
+        $originalSql .= " GROUP BY ".$refer."providerID";
     }
 
     return $originalSql;
@@ -79,8 +79,8 @@ function defineOrder(string $name):string | null
 {
     # Los tipos de ordanamiento que pueden existir
     $orderTypes = [
-        'N-ASC' => 'ORDER BY e.nombre ASC',
-        'N-DESC' => 'ORDER BY e.nombre DESC',
+        'N-ASC' => 'ORDER BY e.name ASC',
+        'N-DESC' => 'ORDER BY e.name DESC',
         'default' => '',
     ];
 

@@ -10,14 +10,14 @@ function formaterOptionsForEquipments(array $options):array | null
         switch ($key){
             case 'word':
                 $newOptions[$key] = [
-                    'table' => "e.nombre",
+                    'table' => "e.name",
                     'value' => "'%".$value."%'",
                     'equal' => 'COLLATE utf8mb4_unicode_ci LIKE'
                 ];
             break;
             case 'category':
                 $newOptions[$key] = [
-                    'table' => 'e.cod_categoria',
+                    'table' => 'e.categoryID',
                     'value' => $value,
                     'equal' => '='
                 ];
@@ -39,7 +39,7 @@ function formaterOptionsForProviders(array $options):array | null
         switch ($key){
             case 'word':
                 $newOptions[$key] = [
-                    'table' => "p.nombre",
+                    'table' => "p.name",
                     'value' => "'%".$value."%'",
                     'equal' => 'COLLATE utf8mb4_unicode_ci LIKE'
                 ];
@@ -51,7 +51,7 @@ function formaterOptionsForProviders(array $options):array | null
             break;
             case 'category':
                 $newOptions[$key] = [
-                    'table' => 'e.cod_categoria',
+                    'table' => 'e.categoryID',
                     'value' => $value,
                     'equal' => '='
                 ];
