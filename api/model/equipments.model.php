@@ -191,9 +191,10 @@
             if(get_class($PDO) !== 'PDOException')
             {
             # Creamos la query con los parametros recibidos
-            $sql="SELECT *
-                    FROM equipment 
-                    WHERE equipmentID = :id";
+            $sql="SELECT e.*, c.name as category
+                FROM equipment e 
+                JOIN category c ON e.categoryID = c.categoryID 
+                WHERE equipmentID = :id";
 
             # Preparamos la query con el string generado
             $query = $PDO->prepare($sql);

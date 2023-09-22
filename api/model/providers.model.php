@@ -163,7 +163,7 @@
             # Si $PDO no es un PDOException, enonces la conexion es correcta y ejecutamos lo siguiente
             if(get_class($PDO) !== 'PDOException'){
                     # Creamos la query con los parametros recibidos
-                    $sql="SELECT e.equipmentID, e.nombre, e.categoryID,c.nombre as categoria
+                    $sql="SELECT e.equipmentID, e.name, e.categoryID,c.name as categoria
                             FROM provider_equipment pe
                             JOIN equipment e ON pe.equipmentID = e.equipmentID
                             JOIN category c ON e.categoryID = c.categoryID
