@@ -103,12 +103,12 @@
             }
 
             # Si existe el proveedor ejecutamos el siguiente codigo
-            if(count($provider) == 1){
+            if($provider){
                 $categories = CategoriesModel::getAllByProvider($id);
                 # Devolvemos un objeto con los datos del proveeedor y con una propiedad llamada equipos
                 # que contiene un array con todos los equipos que vende el proveedor
                 return [
-                    ...$provider[0],
+                    ...$provider,
                     'categories' => $categories
                 ];
             }

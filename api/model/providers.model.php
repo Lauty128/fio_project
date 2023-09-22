@@ -214,7 +214,7 @@
                     # Ejecutamos  la cnsulta
                     $query->execute();
                     # Obtenemos un array con los datos recibidos
-                    $data = $query->fetchAll(PDO::FETCH_ASSOC);
+                    $data = $query->fetch(PDO::FETCH_ASSOC);
 
                     # Retornamos el valor para usarlo en proveedores.model.php
                     return $data;
