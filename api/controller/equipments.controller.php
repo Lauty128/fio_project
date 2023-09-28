@@ -2,12 +2,12 @@
 
     #------ Importar Utilidades
         # estas se usan en los controladores
-        include 'utils/parameters.util.php';
+        require 'utils/parameters.util.php';
         # estas se usan en los modelos
         require 'utils/queries.util.php';
 
     #------ Importar modelos
-        require 'model/Equipments.model.php';
+        require 'model/equipments.model.php';
 
     class EquipmentsController{
         

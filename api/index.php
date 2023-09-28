@@ -3,7 +3,7 @@
     require 'vendor/flightphp/flight/Flight.php';
 
     # ------------ Importar variables
-    require_once 'config/app.php';
+    require 'config/app.php';
 
     #------------- BD PDO
     $PDO; 
