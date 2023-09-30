@@ -30,29 +30,27 @@
             //-------------- Enviar variables para ejecutar la consulta
             //ProvidersModel::getTotal($options);
             
-                $providers = ProvidersModel::getAll($offset, $limit, $order, $options);
+                $data = ProvidersModel::getAll($offset, $limit, $order, $options);
                 # Si la cantidad de elementos es menor al limite o igual a cero, no se consulta en la base de datos el total de elementos
-                $total = ((count($providers) < $limit) && $page == 0)
-                    ? count($providers)
+                $total = ((count($data) < $limit) && $page == 0)
+                    ? count($data)
                     : ProvidersModel::getTotal($options);
             //var_dump($total); exit();
 
-                if(is_int($total) && !isset($provider['Error'])){
+                if(is_int($total) && !isset($data['Error'])){
                     return [
                         'page' => ((int)$page + 1),
                         'limit' => (int)$limit,
                         'hasNextPage' => ((($page + 1) * $limit) < $total),
                         'hasPrevPage' => (($page - 1) >= 0),
                         'total' => (int)$total,
-                        'data' => $providers
+                        'data' => $data
                     ];
                 }
-                else{
-                    return [
-                        'Error' => 500,
-                        'Message' => 'An error was detected'
-                    ];
-                }
+                    
+                // Si accede aqui es porque ocurri un error
+                return $data;
+                
         }
 
         static function getEquipments(int $id)
@@ -67,58 +65,67 @@
             $offset = $page * $limit;
 
             # Almacenamos el resultado de la funcion getEquipments() mandando los parametros que pide
-            $equipments = ProvidersModel::getEquipments($id, $offset, $limit);
+            $data = ProvidersModel::getEquipments($id, $offset, $limit);
 
             # Si la cantidad de elementos es menor al limite o igual a cero, no se consulta en la base de datos el total de elementos
-            $total = ((count($equipments) < $limit) && $page == 0)
-            ? count($equipments)
+            $total = ((count($data) < $limit) && $page == 0)
+            ? count($data)
             : ProvidersModel::getTotalByEquipments($id);
 
             # Retornamos el valor para usarlo en index.php
-            if(is_int($total) && !isset($equipments['Error'])){
+            if(is_int($total) && !isset($data['Error'])){
                 return [
                     'page' => ((int)$page + 1),
                     'limit' => (int)$limit,
                     'hasNextPage' => ((($page + 1) * $limit) < $total),
                     'hasPrevPage' => (($page - 1) >= 0),
                     'total' => (int)$total,
-                    'data' => $equipments
+                    'data' => $data
                 ];
             }
-            else{
-                return [
-                    'Error' => 500,
-                    'Message' => 'An error was detected'
-                ];
-            }
+                
+            // Si accede aqui es porque ocurri un error
+            return $data;
         }
 
         static function getOne(int $id)
         {
             $provider = ProvidersModel::getOne($id);
-            // var_dump($provider);exit();
+            
             # Si la variable $provider devuelve un error de mensaje, lo devolvemos y cortamos la funcion
             if(isset($provider['Error'])){
                 return $provider;
             }
 
             # Si existe el proveedor ejecutamos el siguiente codigo
-            if($provider){
+            if($provider && !isset($provider['Error'])){
                 $categories = CategoriesModel::getAllByProvider($id);
                 # Devolvemos un objeto con los datos del proveeedor y con una propiedad llamada equipos
                 # que contiene un array con todos los equipos que vende el proveedor
                 return [
+                    /*
+                    EN CASO DE NO TENER LA VERSION MAS ACTUALIZADA DE PHP
+                    REEMPLAZAR "...$providers," POR:
+                    "name" => $provider["name"],
+                    "web" => $provider["web"],
+                    "mail" => $provider["mail"],
+                    "address" => $provider["address"],
+                    "phone" => $provider["phone"],
+                    */
                     ...$provider,
                     'categories' => $categories
                 ];
             }
-            else{
+            else if($provider === false){
                 # Si no existe el proveedor devolvemos el siguiente mensaje
                 return [
-                    "Error"=>400,
+                    "Error"=>204,
                     "Message"=>"No existe el proveedor buscado"
                 ];
             }
+
+            # Si se obtiene un error, devolvemos ese error almacenado en $provider
+            return $provider;
 
         }
 
