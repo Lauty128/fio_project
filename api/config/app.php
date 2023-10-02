@@ -26,3 +26,21 @@
 
 //------ CONJUNTO DE DATOS
     define('ORDER_TYPES', ['N-ASC','N-DESC','default']);
+
+//------ FUNCIONES
+    function queryErrorHandler(PDOException $error){
+        # Esta funcion maneja los errores de queries, por lo que modificando esto, se cambia el tipo de respuesta de error de una consulta.
+        $response = [
+            'Error'=>500,
+            'Message'=>'Ocurrio un error durante la consulta',
+            'Error-Message' => $error->getMessage()
+        ];
+
+        # El valor que devuelve esta funcion debe ser retornado por el catch() que lo llama. 
+        return $response;
+
+        # Igual que en database.php podemos devolver esto directamente con FlightPHP, como se ve a continaucion:
+        
+        // Flight::json($response);
+        // exit();
+    }

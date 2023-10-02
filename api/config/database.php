@@ -29,9 +29,22 @@
                 $PDO = new PDO($conection, $this->user, $this->password, $options);
                 return $PDO;
             }
+            # En caso de un error se devuelve un PDOEXception
             catch(PDOException $error){
-                # En caso de un error se devuelve un PDOEXception
-                return $error;
+                # Se crea un objeto con los  siguientes atributos
+                $response = [
+                    'Error'=>500,
+                    'Message'=>'Ocurrio un error al conectarse a la base de datos',
+                    'Error-Message' => $error->getMessage()
+                ];
+                
+                # Con flightPHP retornamos ese objeto en formato JSON
+                Flight::json($response);
+                # Cancelamos la ejecucion del resto del codigo, ya que al exitir un error, no es importante el resto
+                exit();
+
+                # Este script se ejecuta cada vez que se llama a un modelo.
+                # Por lo tanto aqui manejamos los errores de conexion de toda la aplicacion.
             }
         
         }
