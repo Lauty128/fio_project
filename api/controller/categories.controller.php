@@ -15,7 +15,7 @@
             return $data;
         }
 
-        static function getAllByProviders(string $id, bool $is_verified = true) { 
+        static function getAllByProvider(string $id, bool $is_verified = true) { 
             # Verificar que existe el proveedor buscado
             # Si $is_verified es true, significa que anteriormente verificamos que el proveedor existe
             $verification = ($is_verified)
