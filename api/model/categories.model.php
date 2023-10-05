@@ -20,15 +20,20 @@
 
             # Creamos la query con los parametros recibidos
             $sql = 'SELECT * FROM category';
-        
-            # Preparamos la query con el string generado
-            $query = $PDO->query($sql);
+            
+            try{
+                # Preparamos la query con el string generado
+                $query = $PDO->query($sql);
+                
+                # Obtenemos un array con los datos recibidos
+                $data = $query->fetchAll(PDO::FETCH_ASSOC);
 
-            # Obtenemos un array con los datos recibidos
-            $data = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            # Retornamos el valor para usarlo en proveedores.model.php
-            return $data;
+                # Retornamos el valor para usarlo en proveedores.model.php
+                return $data;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
         static function getAllByProvider($id)
@@ -42,20 +47,25 @@
             JOIN equipment e ON e.equipmentID = pe.equipmentID
             JOIN category c ON e.categoryID = c.categoryID
             WHERE pe.providerID = :id';
+            
+            try{
+                # Preparamos la query con el string generado
+                $query = $PDO->prepare($sql);
 
-            # Preparamos la query con el string generado
-            $query = $PDO->prepare($sql);
+                # Definimos los valores de los parametros
+                $query->bindParam(':id', $id);
 
-            # Definimos los valores de los parametros
-            $query->bindParam(':id', $id);
+                # Ejecutamos  la cnsulta
+                $query->execute();
+                # Obtenemos un array con los datos recibidos
+                $data = $query->fetchAll(PDO::FETCH_ASSOC);
 
-            # Ejecutamos  la cnsulta
-            $query->execute();
-            # Obtenemos un array con los datos recibidos
-            $data = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            # Retornamos el valor para usarlo en proveedores.model.php
-            return $data;
+                # Retornamos el valor para usarlo en proveedores.model.php
+                return $data;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
     }

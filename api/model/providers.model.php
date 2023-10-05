@@ -23,20 +23,25 @@
             JOIN provider_equipment pe ON p.providerID = pe.providerID
             WHERE pe.providerID = :id';
 
-            # Prepare query
-            $query = $PDO->prepare($sql);
-            
-            # Bind parameters
-            $query->bindParam(':id', $id);
+             try{
+                # Prepare query
+                $query = $PDO->prepare($sql);
+                
+                # Bind parameters
+                $query->bindParam(':id', $id);
 
-            # Execute query
-            $query->execute();
+                # Execute query
+                $query->execute();
 
-            # Get the response of the 'total' field
-            $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
+                # Get the response of the 'total' field
+                $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
 
-            # return response
-            return $response;
+                # return response
+                return $response;
+            }   
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
         static function getTotal(array | null $options):int | array
@@ -55,16 +60,20 @@
             if($options != null){
                 $sql .= ' '.getWhere($options);
             }
-            //var_dump($sql); exit();
-
-            # Execute query
-            $query = $PDO->query($sql);
             
-            # Get the response of the 'total' field
-            $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
+            try{
+                # Execute query
+                $query = $PDO->query($sql);
+                
+                # Get the response of the 'total' field
+                $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
 
-            # return response
-            return $response;
+                # return response
+                return $response;
+            }   
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
         static function getAll($offset, $limit, string $order, array | null $options){
@@ -95,7 +104,7 @@
             if($options != null){
                 $sql .= ' '.getWhere($options);
             }
-            //var_dump($sql); exit();
+            
             # Ordenar con los datos recibidos
             $sql .= ' '.defineOrder($order);
 
@@ -104,10 +113,11 @@
                 $sql .= ' GROUP BY p.providerID';
             }
 
-            # Agregar la paginación
+            # Agregar la paginaciÃ³n
             $sql .= ' LIMIT :limit OFFSET :offset';
 
         #-------------------- PREPARAR Y EJECUTAR CONSULTA
+        try{
             # Preparamos la query con el string generado
             $query = $PDO->prepare($sql);
 
@@ -123,7 +133,12 @@
             # Retornamos el valor para usarlo en proveedores.model.php
             return $data;
         }
-
+        catch(PDOException $error){
+            return queryErrorHandler($error);
+        }
+        
+    }
+    
         static function getEquipments(int $id, int $offset = 0, int $limit = 20){
             # llamamos a la variable global $PDO
             global $PDO;
@@ -136,24 +151,28 @@
                     WHERE pe.providerID = :id
                     LIMIT :limit
                     OFFSET :offset ";
-
-            # Preparamos la query con el string generado
-            $query = $PDO->prepare($sql);
-
-            # Definimos los valores de los parametros
-            $query->bindParam(':id', $id);
-            $query->bindParam(':limit', $limit);
-            $query->bindParam(':offset', $offset);
-            
-            # Ejecutamos  la consulta
-            $query->execute();
-            # Obtenemos un array con los datos recibidos
-            $data = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            # Retornamos el valor para usarlo en proveedores.model.php
-            return $data;
+            try{
+                $query = $PDO->prepare($sql);
+                
+                # Definimos los valores de los parametros
+                $query->bindParam(':id', $id);
+                $query->bindParam(':limit', $limit);
+                $query->bindParam(':offset', $offset);
+                
+                # Ejecutamos  la consulta
+                $query->execute();
+                # Obtenemos un array con los datos recibidos
+                $data = $query->fetchAll(PDO::FETCH_ASSOC);
+                
+                # Retornamos el valor para usarlo en proveedores.model.php
+                # Preparamos la query con el string generado
+                return $data;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
-        
+
         static function getOne(int $id): Array | bool
         {
             # Use the PDO variable of the line 6
@@ -162,19 +181,24 @@
             # Creamos la query con los parametros recibidos
             $sql="SELECT * FROM provider WHERE providerID = :id";
 
-            # Preparamos la query con el string generado
-            $query = $PDO->prepare($sql);
+            try{
+                # Preparamos la query con el string generado
+                $query = $PDO->prepare($sql);
 
-            # Definimos los valores de los parametros
-            $query->bindParam(':id', $id);
-            
-            # Ejecutamos  la cnsulta
-            $query->execute();
-            # Obtenemos un array con los datos recibidos
-            $data = $query->fetch(PDO::FETCH_ASSOC);
+                # Definimos los valores de los parametros
+                $query->bindParam(':id', $id);
+                
+                # Ejecutamos  la cnsulta
+                $query->execute();
+                # Obtenemos un array con los datos recibidos
+                $data = $query->fetch(PDO::FETCH_ASSOC);
 
-            # Retornamos el valor para usarlo en proveedores.model.php
-            return $data;
+                # Retornamos el valor para usarlo en proveedores.model.php
+                return $data;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
     }

@@ -21,21 +21,26 @@
             $sql = 'SELECT COUNT(pe.equipmentID) as total FROM equipment e
             JOIN provider_equipment pe ON e.equipmentID = pe.equipmentID
             WHERE pe.equipmentID = :id';
-
-            # Prepare query
-            $query = $PDO->prepare($sql);
             
-            # Bind parameters
-            $query->bindParam(':id', $id);
+            try{
+                # Prepare query
+                $query = $PDO->prepare($sql);
+                
+                # Bind parameters
+                $query->bindParam(':id', $id);
 
-            # Execute query
-            $query->execute();
+                # Execute query
+                $query->execute();
 
-            # Get the response of the 'total' field
-            $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
+                # Get the response of the 'total' field
+                $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
 
-            # return response
-            return $response;
+                # return response
+                return $response;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
         static function getTotal(null | array $options):int | array
@@ -54,16 +59,21 @@
                 $sql .= ' '.getWhere($options);
             }
 
-            # Create query and execute
-            $query = $PDO->prepare($sql);
+            try{
+                # Create query and execute
+                $query = $PDO->prepare($sql);
 
-            $query->execute();
+                $query->execute();
 
-            # Get the response of the 'total' field
-            $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
+                # Get the response of the 'total' field
+                $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
 
-            # return response
-            return $response;
+                # return response
+                return $response;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
         
@@ -86,7 +96,7 @@
             # Ordenar con los datos recibidos
             $sql .= ' '.defineOrder($order);
             
-            # Agregar la paginación
+            # Agregar la paginaciÃ³n
             $sql .= ' LIMIT :limit OFFSET :offset';
             
             #-------------------- PREPARAR Y EJECUTAR CONSULTA
@@ -123,22 +133,26 @@
                     WHERE pe.equipmentID = :id
                     LIMIT :limit
                     OFFSET :offset ";
+            try{
+                # Preparamos la query con el string generado
+                $query = $PDO->prepare($sql);
 
-            # Preparamos la query con el string generado
-            $query = $PDO->prepare($sql);
+                # Definimos los valores de los parametros
+                $query->bindParam(':id', $id);
+                $query->bindParam(':limit', $limit);
+                $query->bindParam(':offset', $offset);
+                
+                # Ejecutamos  la consulta
+                $query->execute();
+                # Obtenemos un array con los datos recibidos
+                $data = $query->fetchAll(PDO::FETCH_ASSOC);
 
-            # Definimos los valores de los parametros
-            $query->bindParam(':id', $id);
-            $query->bindParam(':limit', $limit);
-            $query->bindParam(':offset', $offset);
-            
-            # Ejecutamos  la consulta
-            $query->execute();
-            # Obtenemos un array con los datos recibidos
-            $data = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            # Retornamos el valor para usarlo en proveedores.model.php
-            return $data;
+                # Retornamos el valor para usarlo en proveedores.model.php
+                return $data;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
         static function getOne(int $id)
@@ -152,20 +166,25 @@
                 FROM equipment e 
                 JOIN category c ON e.categoryID = c.categoryID 
                 WHERE equipmentID = :id";
-
-            # Preparamos la query con el string generado
-            $query = $PDO->prepare($sql);
-
-            # Definimos los valores de los parametros
-            $query->bindParam(':id', $id);
             
-            # Ejecutamos  la cnsulta
-            $query->execute();
-            # Obtenemos un array con los datos recibidos
-            $data = $query->fetch(PDO::FETCH_ASSOC);
-            
-            # Retornamos el valor para usarlo en proveedores.model.php
-            return $data;
+            try{
+                # Preparamos la query con el string generado
+                $query = $PDO->prepare($sql);
+
+                # Definimos los valores de los parametros
+                $query->bindParam(':id', $id);
+                
+                # Ejecutamos  la cnsulta
+                $query->execute();
+                # Obtenemos un array con los datos recibidos
+                $data = $query->fetch(PDO::FETCH_ASSOC);
+                
+                # Retornamos el valor para usarlo en proveedores.model.php
+                return $data;
+            }
+            catch(PDOException $error){
+                return queryErrorHandler($error);
+            }
         }
 
     }
