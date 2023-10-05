@@ -74,7 +74,7 @@
             
             #------------------- CREAR QUERY
             # Creamos la query con los parametros recibidos
-            $sql = 'SELTECT e.equipmentID, e.name, e.categoryID, c.name as category 
+            $sql = 'SELECT e.equipmentID, e.name, e.categoryID, c.name as category 
                 FROM equipment e
                 JOIN category c ON e.categoryID = c.categoryID';
             
