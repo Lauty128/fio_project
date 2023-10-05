@@ -14,12 +14,12 @@
         {
             //------------- Detectar queries
                 # Si existen los parametros toman su valor, sino el valor por defecto en las configuraciones
-                $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : constant('PAGE');
-                $limit = (isset($_GET['limit'])) ? $_GET['limit'] : constant('LIMIT');
+                $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : PAGE;
+                $limit = (isset($_GET['limit'])) ? $_GET['limit'] : LIMIT;
 
             //------------- Manipular queries
                 # Definimos un orden por defecto o el recibido por los parametros
-                $order = (isset($_GET['order'])) ? formaterOrder($_GET['order']) : constant('ORDER');
+                $order = (isset($_GET['order'])) ? formaterOrder($_GET['order']) : ORDER;
                 
                 # Formateamos las opciones de busqueda recibidas por parametro
                 $options = formaterOptionsForProviders($_GET ?? []);
@@ -57,8 +57,8 @@
         {
             //---------- Detectar queries
             # Si existen los parametros toman su valor, sino el valor por defecto en las configuraciones
-            $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : constant('PAGE');
-            $limit = (isset($_GET['limit'])) ? $_GET['limit'] : constant('LIMIT_SMALL');
+            $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : PAGE;
+            $limit = (isset($_GET['limit'])) ? $_GET['limit'] : SMALL_LIMIT;
 
             //---------- Manipular queries
             # Obtenemos el offset multiplicando la $page por el $limit
@@ -98,8 +98,8 @@
             }
 
             # Si existe el proveedor ejecutamos el siguiente codigo
-            if($provider && !isset($provider['Error'])){
-                $categories = CategoriesModel::getAllByProvider($id);
+            if($provider){
+                $categories = CategoriesModel::getAllByProvider($id, true);
                 # Devolvemos un objeto con los datos del proveeedor y con una propiedad llamada equipos
                 # que contiene un array con todos los equipos que vende el proveedor
                 return [
