@@ -119,8 +119,8 @@
             else if($provider === false){
                 # Si no existe el proveedor devolvemos el siguiente mensaje
                 return [
-                    "Error"=>204,
-                    "Message"=>"No existe el proveedor buscado"
+                    'Error' => 404,
+                    'Message' => 'The provider you are looking for does not exist'
                 ];
             }
 
