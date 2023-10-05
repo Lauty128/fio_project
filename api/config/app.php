@@ -21,7 +21,7 @@
     #Aqui definimos los valores por defecto que tomaremos en el codigo
     define('PAGE', 0);
     define('LIMIT', 40);
-    define('LIMIT_SMALL', 10);
+    define('SMALL_LIMIT', 10);
     define('ORDER', 'default');
 
 //------ CONJUNTO DE DATOS
