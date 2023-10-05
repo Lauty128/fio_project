@@ -81,7 +81,7 @@ function defineOrder(string $name):string | null
     $orderTypes = [
         'N-ASC' => 'ORDER BY e.name ASC',
         'N-DESC' => 'ORDER BY e.name DESC',
-        'default' => '',
+        'default' => 'ORDER BY e.name ASC',
     ];
 
     # Controlar que el tipo de orden exista en el array
