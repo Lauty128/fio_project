@@ -25,7 +25,7 @@
     define('ORDER', 'default');
 
 //------ CONJUNTO DE DATOS
-    define('ORDER_TYPES', ['N-ASC','N-DESC','default']);
+    define('ORDER_TYPES', ['N-ASC','N-DESC','ID-ASC','ID-DESC']);
 
 //------ FUNCIONES
     function queryErrorHandler(PDOException $error){

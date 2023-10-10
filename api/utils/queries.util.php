@@ -75,41 +75,29 @@ function defineQueryByOptionsForProviders(array $options, string $refer = ''):st
     return $originalSql;
 }
 
-// function defineOrder($table){
+function defineOrder(string $order, string $table){
+    # Los distintos tipos de ordenes para cada tabla (algunos son bastantes parecidos)
+    $orderTypes = [
+        'provider' => [
+            'ID-ASC' => 'ORDER BY p.providerID ASC',
+            'ID-DESC' => 'ORDER BY p.providerID DESC',
+            'N-ASC' => 'ORDER BY p.name ASC',
+            'N-DESC' => 'ORDER BY p.name DESC',
+            'default' => 'ORDER BY p.name ASC'
+        ],
+        'equipment' => [
+            'ID-ASC' => 'ORDER BY e.equipmentID ASC',
+            'ID-DESC' => 'ORDER BY e.equipmentID DESC',
+            'N-ASC' => 'ORDER BY e.name ASC',
+            'N-DESC' => 'ORDER BY e.name DESC',
+            'default' => 'ORDER BY e.name ASC'
+        ],
+    ];
+
+    # Si no existe alguna de las tablas retornamos un string vacio
+    if(!isset($orderTypes[$table])){ return ''; }
     
-// }
-
-function defineOrderForProviders(string $name,):string | null
-{
-    # Los tipos de ordanamiento que pueden existir
-    $orderTypes = [
-        'ID-ASC' => 'ORDER BY p.providerID ASC',
-        'ID-DESC' => 'ORDER BY p.providerID DESC',
-        'N-ASC' => 'ORDER BY p.name ASC',
-        'N-DESC' => 'ORDER BY p.name DESC',
-        'default' => 'ORDER BY p.name ASC',
-    ];
-
-    # Controlar que el tipo de orden exista en el array
-    if(!isset($orderTypes[$name])){ return null; }
-
-    return $orderTypes[$name];
-}
-
-function defineOrderForEquipments(string $name,):string | null
-{
-    # Los tipos de ordanamiento que pueden existir
-    $orderTypes = [
-        'ID-ASC' => 'ORDER BY e.equipmentID ASC',
-        'ID-DESC' => 'ORDER BY e.equipmentID DESC',
-        'N-ASC' => 'ORDER BY e.name ASC',
-        'N-DESC' => 'ORDER BY e.name DESC',
-        'default' => 'ORDER BY e.name ASC',
-    ];
-
-    # Controlar que el tipo de orden exista en el array
-    if(!isset($orderTypes[$name])){ return null; }
-
-    return $orderTypes[$name];
+    # Si existe la tabla retornamos el string indicado dentro de la tabla y la key del orden
+    return $orderTypes[$table][$order];
 }
 

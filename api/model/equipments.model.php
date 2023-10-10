@@ -94,7 +94,7 @@
             }
 
             # Ordenar con los datos recibidos
-            $sql .= ' '.defineOrderForEquipments($order);
+            $sql .= ' '.defineOrder($order, 'equipment');
             
             # Agregar la paginaciÃ³n
             $sql .= ' LIMIT :limit OFFSET :offset';
