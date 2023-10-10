@@ -75,10 +75,33 @@ function defineQueryByOptionsForProviders(array $options, string $refer = ''):st
     return $originalSql;
 }
 
-function defineOrder(string $name):string | null
+// function defineOrder($table){
+    
+// }
+
+function defineOrderForProviders(string $name,):string | null
 {
     # Los tipos de ordanamiento que pueden existir
     $orderTypes = [
+        'ID-ASC' => 'ORDER BY p.providerID ASC',
+        'ID-DESC' => 'ORDER BY p.providerID DESC',
+        'N-ASC' => 'ORDER BY p.name ASC',
+        'N-DESC' => 'ORDER BY p.name DESC',
+        'default' => 'ORDER BY p.name ASC',
+    ];
+
+    # Controlar que el tipo de orden exista en el array
+    if(!isset($orderTypes[$name])){ return null; }
+
+    return $orderTypes[$name];
+}
+
+function defineOrderForEquipments(string $name,):string | null
+{
+    # Los tipos de ordanamiento que pueden existir
+    $orderTypes = [
+        'ID-ASC' => 'ORDER BY e.equipmentID ASC',
+        'ID-DESC' => 'ORDER BY e.equipmentID DESC',
         'N-ASC' => 'ORDER BY e.name ASC',
         'N-DESC' => 'ORDER BY e.name DESC',
         'default' => 'ORDER BY e.name ASC',
@@ -89,3 +112,4 @@ function defineOrder(string $name):string | null
 
     return $orderTypes[$name];
 }
+

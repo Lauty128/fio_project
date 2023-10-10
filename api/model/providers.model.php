@@ -106,7 +106,7 @@
             }
             
             # Ordenar con los datos recibidos
-            $sql .= ' '.defineOrder($order);
+            $sql .= ' '.defineOrderForProviders($order);
 
             # Si queremos obtener el total de equipamientos vendido debemos agrupar los resultados
             if(isset($options['equipments'])){
