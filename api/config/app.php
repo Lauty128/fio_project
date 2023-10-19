@@ -1,4 +1,6 @@
 <?php
+    # Import the errors of the errors.php file 
+    require_once 'config/errors.php';
 
 # ----------- CONFIGURAR CORS
     // Specify domains from which requests are allowed
@@ -43,4 +45,13 @@
         
         // Flight::json($response);
         // exit();
+    }
+
+    //------ ERROR HANDLER
+    function DefineError($code, $errorMessage = 'Error'){
+
+        return [
+            ...ERROR_HANDLER[$code],
+            'error_message' => $errorMessage
+        ] ?? false;
     }

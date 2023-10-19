@@ -65,7 +65,12 @@
         Flight::json($response);
     });
     
-    #************************************************
+    # Code error = "Not Found endpoint #-404"
+    # This error is showed if the endpoint not exists.
+    Flight::route('*', function(){
+        $response = DefineError('#-404', 'The requested endpoint is not found');
+        Flight::json($response);
+    });
 
     # ------------ Iniciar API
     Flight::start();

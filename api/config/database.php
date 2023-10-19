@@ -32,14 +32,10 @@
             # En caso de un error se devuelve un PDOEXception
             catch(PDOException $error){
                 # Se crea un objeto con los  siguientes atributos
-                $response = [
-                    'Error'=>500,
-                    'Message'=>'Ocurrio un error al conectarse a la base de datos',
-                    'Error-Message' => $error->getMessage()
-                ];
+                $response = DefineError('#-000', $error->getMessage());
                 
                 # Con flightPHP retornamos ese objeto en formato JSON
-                Flight::json($response);
+                Flight::json($response, $response['http_code']);
                 # Cancelamos la ejecucion del resto del codigo, ya que al exitir un error, no es importante el resto
                 exit();
 
