@@ -13,6 +13,10 @@
 //----- Definir timezone
     date_default_timezone_set("America/Argentina/Buenos_Aires");
 
+//----- Acces to system
+    #define('ALLOWED_HOSTS', ['proyecto-fio.local','lautarosilverii.000webhostapp.com']);
+    define('ACCES_TOKEN', '<token>');
+
 //----- Conexión con base de datos
     define('DB_SERVER','localhost');
     define('DB_NAME','fio_project');

@@ -8,6 +8,17 @@
     #------------- BD PDO
     $PDO; 
     
+    //------------> Global Middleware
+    require 'middleware/auth.php';
+    use Middleware\Auth;
+
+    if(!Auth::VerifyAuthenication()){
+        $error_response = DefineError('#-401', 'Authentication is required for this application');
+        Flight::json($error_response, $error_response['http_code']);
+        exit();
+    }
+    
+
     #******************* ENDPOINTS **************************
     # --- Obtener todos los proveedores
     Flight::route('/providers', function(){
