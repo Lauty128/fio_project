@@ -40,8 +40,8 @@
                 return $response;
             }   
             catch(PDOException $error){
-                return queryErrorHandler($error);
-            }
+                DefineError('#-001', $error->getMessage());
+            } 
         }
 
         static function getTotal(array | null $options):int | array
@@ -72,8 +72,8 @@
                 return $response;
             }   
             catch(PDOException $error){
-                return queryErrorHandler($error);
-            }
+                DefineError('#-001', $error->getMessage());
+            } 
         }
 
         static function getAll($offset, $limit, string $order, array | null $options){
@@ -134,8 +134,8 @@
             return $data;
         }
         catch(PDOException $error){
-            return queryErrorHandler($error);
-        }
+            DefineError('#-001', $error->getMessage());
+        } 
         
     }
     
@@ -169,8 +169,8 @@
                 return $data;
             }
             catch(PDOException $error){
-                return queryErrorHandler($error);
-            }
+                DefineError('#-001', $error->getMessage());
+            } 
         }
 
         static function getOne(int $id): Array | bool
@@ -197,8 +197,8 @@
                 return $data;
             }
             catch(PDOException $error){
-                return queryErrorHandler($error);
-            }
+                DefineError('#-001', $error->getMessage());
+            } 
         }
 
     }

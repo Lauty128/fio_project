@@ -32,7 +32,7 @@
                 return $data;
             }
             catch(PDOException $error){
-                return queryErrorHandler($error);
+                DefineError('#-001', $error->getMessage());
             }
         }
 
@@ -64,7 +64,7 @@
                 return $data;
             }
             catch(PDOException $error){
-                return queryErrorHandler($error);
+                DefineError('#-001', $error->getMessage());
             }
         }
 

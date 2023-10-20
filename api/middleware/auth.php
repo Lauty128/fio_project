@@ -2,8 +2,6 @@
 
 namespace Middleware;
 
-use Flight;
-
 class Auth{
 
     static function VerifyAuthenication(): bool

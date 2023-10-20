@@ -66,7 +66,7 @@ define("ERROR_HANDLER", [
     ],
    
     '#-002' => [
-        'http_code'=> 204,
+        'http_code'=> 404,
         'message'=> 'El servidor no pudo encontrar el elemento buscado',
         'user_error_title' => [
             'es' => 'No existe el elemento buscado',
