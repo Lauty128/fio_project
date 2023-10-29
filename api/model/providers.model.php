@@ -1,31 +1,23 @@
 <?php 
     #--------------------------- ESTE CODIGO DEBE ESTAR EN CADA ARCHIVO .MODEL.PHP
-    # Importar variable PDO del archivo global (index.php)
-    global $PDO;
 
     #----- BD CONNECTION
-    if(!$PDO){
-        require 'config/database.php';
-        $database = new Database();
-        $PDO = $database->connect();
-    }
+    use Config\Database;
+    Database::connect();
+    
     #--------------------------------------------------------------------
     
     class ProvidersModel{ 
 
         static function getTotalByEquipments(string $id):int | array
-        {
-            # Call to the global variable $PDO
-            global $PDO;
-
-            # Create query
+        {# Create query
             $sql = 'SELECT COUNT(pe.providerID) as total FROM provider p
             JOIN provider_equipment pe ON p.providerID = pe.providerID
             WHERE pe.providerID = :id';
 
              try{
                 # Prepare query
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
                 
                 # Bind parameters
                 $query->bindParam(':id', $id);
@@ -46,9 +38,6 @@
 
         static function getTotal(array | null $options):int | array
         {
-            # Call to the global variable $PDO
-            global $PDO;
-
             # Create query
             $sql = 'SELECT COUNT(DISTINCT p.providerID) as total FROM provider p';
             
@@ -63,7 +52,7 @@
             
             try{
                 # Execute query
-                $query = $PDO->query($sql);
+                $query = Database::$connection->query($sql);
                 
                 # Get the response of the 'total' field
                 $response = $query->fetch(PDO::FETCH_ASSOC)['total'];
@@ -76,10 +65,8 @@
             } 
         }
 
-        static function getAll($offset, $limit, string $order, array | null $options){
-            # llamamos a la variable global $PDO
-            global $PDO;
-
+        static function getAll($offset, $limit, string $order, array | null $options)
+        {
         #------------------- CREAR QUERY
             # Creamos la query con los parametros recibidos
             $sql = (isset($options['equipments']))
@@ -119,7 +106,7 @@
         #-------------------- PREPARAR Y EJECUTAR CONSULTA
         try{
             # Preparamos la query con el string generado
-            $query = $PDO->prepare($sql);
+            $query = Database::$connection->prepare($sql);
 
             # Definimos los valores de los parametros
             $query->bindParam(':limit', $limit);
@@ -140,9 +127,6 @@
     }
     
         static function getEquipments(int $id, int $offset = 0, int $limit = 20){
-            # llamamos a la variable global $PDO
-            global $PDO;
-
             # Creamos la query con los parametros recibidos
             $sql="SELECT e.equipmentID, e.name, e.categoryID,c.name as category
                     FROM provider_equipment pe
@@ -152,7 +136,7 @@
                     LIMIT :limit
                     OFFSET :offset ";
             try{
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
                 
                 # Definimos los valores de los parametros
                 $query->bindParam(':id', $id);
@@ -175,15 +159,12 @@
 
         static function getOne(int $id): Array | bool
         {
-            # Use the PDO variable of the line 6
-            global $PDO;
-        
             # Creamos la query con los parametros recibidos
             $sql="SELECT * FROM provider WHERE providerID = :id";
 
             try{
                 # Preparamos la query con el string generado
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
 
                 # Definimos los valores de los parametros
                 $query->bindParam(':id', $id);

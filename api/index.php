@@ -5,9 +5,7 @@
         
         # Importar variables
         require 'config/app.php';
-        
-        # Variable para conectar a la base de datos
-        $PDO; 
+        require 'config/database.php';
     # ----------------------------------------------------------
     
     //------------> Global Middleware
@@ -17,7 +15,7 @@
     function validateAuthentication(){
         if(!Auth::VerifyAuthenication()){
             $error_response = DefineError('#-401', 'Authentication is required for this application');
-            Flight::json($error_response, $error_response['http_code']);
+            //Flight::json($error_response, $error_response['http_code']);
             exit();
         }
     }

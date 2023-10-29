@@ -1,22 +1,16 @@
 <?php
     #--------------------------- ESTE CODIGO DEBE ESTAR EN CADA ARCHIVO .MODEL.PHP
-    # Importar variable PDO del archivo global (index.php)
-    global $PDO;
-
+    
     #----- BD CONNECTION
-    if(!$PDO){
-        require 'config/database.php';
-        $database = new Database();
-        $PDO = $database->connect();
-    }
+    use Config\Database;
+    Database::connect();
+
     #--------------------------------------------------------------------
 
     class EquipmentsModel{ 
 
         static function getTotalByProviders(string $id):int | array
         {
-            # Call to the global variable $PDO
-            global $PDO;
             
             $sql = 'SELECT COUNT(pe.equipmentID) as total FROM equipment e
             JOIN provider_equipment pe ON e.equipmentID = pe.equipmentID
@@ -24,7 +18,7 @@
             
             try{
                 # Prepare query
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
                 
                 # Bind parameters
                 $query->bindParam(':id', $id);
@@ -45,9 +39,7 @@
 
         static function getTotal(null | array $options):int | array
         {
-            # Call to the global variable $PDO
-            global $PDO;
-
+            
             $sql = 'SELECT COUNT(e.equipmentID) as total FROM equipment e';
                 # Crear variaciones en base a las opciones
 
@@ -61,7 +53,7 @@
 
             try{
                 # Create query and execute
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
 
                 $query->execute();
 
@@ -79,8 +71,6 @@
         
         static function getAll($offset, $limit, $order, array | null $options)
         {
-            # llamamos a la variable global $PDO
-            global $PDO;
             
             #------------------- CREAR QUERY
             # Creamos la query con los parametros recibidos
@@ -102,7 +92,7 @@
             #-------------------- PREPARAR Y EJECUTAR CONSULTA
             try{
                 # Preparamos la query con el string generado
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
     
                 # Definimos los valores de los parametros
                 $query->bindParam(':limit', $limit);
@@ -123,9 +113,7 @@
 
         static function getProviders(int $id, int $offset = 0, int $limit = 20)
         {
-            # llamamos a la variable global $PDO
-            global $PDO;
-
+            
             # Creamos la query con los parametros recibidos
             $sql="SELECT p.providerID, p.name 
                     FROM provider_equipment pe
@@ -135,7 +123,7 @@
                     OFFSET :offset ";
             try{
                 # Preparamos la query con el string generado
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
 
                 # Definimos los valores de los parametros
                 $query->bindParam(':id', $id);
@@ -157,8 +145,6 @@
 
         static function getOne(int $id)
         { 
-            # llamamos a la variable global $PDO de este archivo
-            global $PDO;
             
         
             # Creamos la query con los parametros recibidos
@@ -169,7 +155,7 @@
             
             try{
                 # Preparamos la query con el string generado
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
 
                 # Definimos los valores de los parametros
                 $query->bindParam(':id', $id);

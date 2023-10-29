@@ -1,29 +1,22 @@
 <?php 
     #--------------------------- ESTE CODIGO DEBE ESTAR EN CADA ARCHIVO .MODEL.PHP
-    # Importar variable PDO del archivo global (index.php)
-    global $PDO;
-
+    
     #----- BD CONNECTION
-    if(!$PDO){
-        require 'config/database.php';
-        $database = new Database();
-        $PDO = $database->connect();
-    }
+    use Config\Database;
+    Database::connect();
+
     #--------------------------------------------------------------------
 
     class CategoriesModel{ 
 
         static function getAll()
         {
-            # llamamos a la variable global $PDO
-            global $PDO;
-
             # Creamos la query con los parametros recibidos
             $sql = 'SELECT * FROM category';
             
             try{
                 # Preparamos la query con el string generado
-                $query = $PDO->query($sql);
+                $query = Database::$connection->query($sql);
                 
                 # Obtenemos un array con los datos recibidos
                 $data = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -38,9 +31,6 @@
 
         static function getAllByProvider($id)
         {
-            # llamamos a la variable global $PDO
-            global $PDO;
-
             # Creamos la query con los parametros recibidos
             $sql = 'SELECT DISTINCT c.categoryID,c.name FROM provider p
             JOIN provider_equipment pe ON p.providerID = pe.providerID
@@ -50,7 +40,7 @@
             
             try{
                 # Preparamos la query con el string generado
-                $query = $PDO->prepare($sql);
+                $query = Database::$connection->prepare($sql);
 
                 # Definimos los valores de los parametros
                 $query->bindParam(':id', $id);
