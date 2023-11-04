@@ -31,7 +31,6 @@
 
 //---------> Validator
     Flight::map('Validate', function(){
-        //return;
         if(!\App\Middleware\Auth::VerifyAuthenication()){
             App\Config\Config::DefineError('#-401', 'Authentication is required for this application');
         }
