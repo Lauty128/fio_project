@@ -2,5 +2,7 @@
 client
 client/node_modules
 database
+api/vendor
 
 # files
+api/config/app.php

@@ -1,149 +1,36 @@
 <?php
-    # ------------------------ NO ELIMINAR -----------------------
-        # Importar código de flightphp
-        require 'vendor/flightphp/flight/Flight.php';
-        
-        # Importar variables
-        require 'config/app.php';
-
-        # Importar la clase para conectarse a la base de datos
-        require 'config/database.php';
-    # ----------------------------------------------------------
     
-    //------------> Global Middleware
-    require 'middleware/auth.php';
-    use Middleware\Auth;
-
-    function validateAuthentication(){
-        if(!Auth::VerifyAuthenication()){
-            DefineError('#-401', 'Authentication is required for this application');
-        }
-    }
+    //-------------> Dependencies 
+    # Autoload
+    require __DIR__ . '/vendor/autoload.php';
+    # Configs
+    require __DIR__ . '/public/config.php';
     
+    //-------------> Global Middlewares
+    Flight::Validate();
 
-    #******************* ENDPOINTS **************************
-        # --- Obtener todos los proveedores
-        Flight::route('/providers', function(){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/providers.controller.php';
-            $response = ProvidersController::getAll();
-        
-            //-----> Response
-            Flight::json($response);
-        });
-        
-        # --- Obtener un proveedor
-        Flight::route('/providers/@id', function($id){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/providers.controller.php';
-            $response = ProvidersController::getOne($id);
-            
-            //-----> Response
-            Flight::json($response);
-        });
+    //-------------> Routes
+    # Providers
+    Flight::route('GET /providers', function(){ \App\Controller\Providers::getAll(); });
+    Flight::route('GET /providers/@id', function($id){ \App\Controller\Providers::getOne($id); });
+    Flight::route('GET /providers/@id/equipments', function($id){ \App\Controller\Providers::getEquipments($id); });
+    
+    # Equipments
+    Flight::route('GET /equipments', function(){ \App\Controller\Equipments::getAll(); });
+    Flight::route('GET /equipments/@id', function($id){ \App\Controller\Equipments::getOne($id); });
+    Flight::route('GET /equipments/@id/providers', function($id){ \App\Controller\Equipments::getProviders($id); });
+    Flight::route('GET /equipments/@id/specifications', function($id){ \App\Controller\Equipments::getSpecifications($id); });
+    
+    # Categories
+    Flight::route('GET /categories', function(){ \App\Controller\Categories::getAll(); });
+    Flight::route('GET /categories/@id', function($id){ \App\Controller\Categories::getAllByProvider($id); });
 
-        # --- Obtener los equipos vendidos por un proveedor
-        Flight::route('/providers/@id/equipments', function($id){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/providers.controller.php';
-            $response = ProvidersController::getEquipments($id);
-            
-            //-----> Response
-            Flight::json($response);
-        });
-        
-        # --- Obtener todos los equipos
-        Flight::route('/equipments', function(){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/equipments.controller.php';
-            $response = EquipmentsController::getAll();
-            
-            //-----> Response
-            Flight::json($response);
-        });
-        
-        # --- Obtener un equipo
-        Flight::route('/equipments/@id', function($id){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/equipments.controller.php';
-            $response = EquipmentsController::getOne($id);
-            
-            //-----> Response
-            Flight::json($response);
-        });
+    
+    # Not found page
+    Flight::route('*', function(){
+        $response = \App\Config\Config::DefineError('#-404', 'The requested endpoint is not found');
+        Flight::json($response);
+    });
 
-         # --- Obtener las especificaciones de un equipo
-         Flight::route('/equipments/@id/specifications', function($id){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/equipments.controller.php';
-            EquipmentsController::getSpecifications($id);
-            
-        });
-
-        # --- Obtener los proveedores que venden un equipo
-        Flight::route('/equipments/@id/providers', function($id){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/equipments.controller.php';
-            $response = EquipmentsController::getProviders($id);
-            
-            //-----> Response
-            Flight::json($response);
-        });
-
-        # --- Obtener todas las categorias
-        Flight::route('/categories', function(){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/categories.controller.php';
-            $response = CategoriesController::getAll();
-            
-            //-----> Response
-            Flight::json($response);
-        });
-
-        # --- Obtener todas las categorias de equipos que vende un proveedor
-        Flight::route('/categories/@id', function($id){
-            //-----> Middlewares
-            validateAuthentication();
-            
-            //-----> Controllers    
-            require 'controller/categories.controller.php';
-            $response = CategoriesController::getAllByProvider($id);
-            
-            //-----> Response
-            Flight::json($response);
-        });
-        
-
-        # Code error = "Not Found endpoint #-404"
-        # This error is showed if the endpoint not exists.
-        Flight::route('*', function(){
-            $response = DefineError('#-404', 'The requested endpoint is not found');
-            Flight::json($response);
-        });
-
-    # ------------ Iniciar API
+    //-------------> Execute API
     Flight::start();
