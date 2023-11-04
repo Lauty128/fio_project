@@ -97,4 +97,35 @@
             return $equipment; 
         }
 
+        static function getSpecifications($id)
+        {
+            $equipment = EquipmentsModel::getOne($id);
+
+            if(!$equipment){
+                DefineError('#-002', 'The indicated equipment was not found');
+            }
+            
+            $filename = $equipment['specifications'] ?? 'default.txt';
+            $path = 'resources/specifications/'.$filename;
+            
+            if(file_exists($path)){
+                $custom_filename = $equipment['name'].'.'. explode('.', $filename)[1];
+
+                // Define headers
+                header("Cache-Control: public");
+                header("Content-Description: File Transfer");
+                header("Content-Disposition: attachment; filename=$custom_filename");
+                header("Content-Type: application/zip");
+                header("Content-Transfer-Encoding: binary");
+                
+                // Read the file
+                readfile($path);
+                exit();
+            }
+            else{
+                DefineError('#-002', 'The equipment specifications file was not found');
+            }
+            
+        }
+
     }

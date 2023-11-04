@@ -10,7 +10,8 @@
     class ProvidersModel{ 
 
         static function getTotalByEquipments(string $id):int | array
-        {# Create query
+        {
+            # Create query
             $sql = 'SELECT COUNT(pe.providerID) as total FROM provider p
             JOIN provider_equipment pe ON p.providerID = pe.providerID
             WHERE pe.providerID = :id';
@@ -68,13 +69,14 @@
         static function getAll($offset, $limit, string $order, array | null $options)
         {
         #------------------- CREAR QUERY
+            # Create the query with the parameters received
             # Creamos la query con los parametros recibidos
             $sql = (isset($options['equipments']))
                 # Si existe el filtro de equipos agregamos un campo mas a mostrar y un JOIN a la tabla proveedor_equipo
                 ? 'SELECT DISTINCT p.*, count(pe.providerID) as equipment
                     FROM provider p
                     JOIN provider_equipment pe ON pe.providerID = p.providerID'
-                # Si no existe hacemos un SELECT simple
+                # Do a simple SELECT if not exist
                 :  'SELECT DISTINCT p.* FROM provider p';
 
             # SI existe el filtro de categoria y equipos solo agregamos el JOIN a la tabla equipo

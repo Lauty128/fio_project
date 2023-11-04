@@ -1,10 +1,12 @@
 <?php
-    # ------------------------ NO DELETE -----------------------
+    # ------------------------ NO ELIMINAR -----------------------
         # Importar código de flightphp
         require 'vendor/flightphp/flight/Flight.php';
         
         # Importar variables
         require 'config/app.php';
+
+        # Importar la clase para conectarse a la base de datos
         require 'config/database.php';
     # ----------------------------------------------------------
     
@@ -14,9 +16,7 @@
 
     function validateAuthentication(){
         if(!Auth::VerifyAuthenication()){
-            $error_response = DefineError('#-401', 'Authentication is required for this application');
-            //Flight::json($error_response, $error_response['http_code']);
-            exit();
+            DefineError('#-401', 'Authentication is required for this application');
         }
     }
     
@@ -85,6 +85,17 @@
             
             //-----> Response
             Flight::json($response);
+        });
+
+         # --- Obtener las especificaciones de un equipo
+         Flight::route('/equipments/@id/specifications', function($id){
+            //-----> Middlewares
+            validateAuthentication();
+            
+            //-----> Controllers    
+            require 'controller/equipments.controller.php';
+            EquipmentsController::getSpecifications($id);
+            
         });
 
         # --- Obtener los proveedores que venden un equipo

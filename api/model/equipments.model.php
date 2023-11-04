@@ -11,7 +11,6 @@
 
         static function getTotalByProviders(string $id):int | array
         {
-            
             $sql = 'SELECT COUNT(pe.equipmentID) as total FROM equipment e
             JOIN provider_equipment pe ON e.equipmentID = pe.equipmentID
             WHERE pe.equipmentID = :id';
@@ -37,12 +36,12 @@
             }
         }
 
+        //Function to get total cuantity of equipments
         static function getTotal(null | array $options):int | array
         {
-            
             $sql = 'SELECT COUNT(e.equipmentID) as total FROM equipment e';
-                # Crear variaciones en base a las opciones
 
+            # Create variations based on the options
             if(isset($options['category'])){
                 $sql .= ' JOIN category c ON e.categoryID = c.categoryID';
             }
@@ -73,37 +72,37 @@
         {
             
             #------------------- CREAR QUERY
-            # Creamos la query con los parametros recibidos
+            # Create the query with the received parameters
             $sql = 'SELECT e.equipmentID, e.name, e.categoryID, c.name as category 
                 FROM equipment e
                 JOIN category c ON e.categoryID = c.categoryID';
             
-            # Crear variaciones en base a las opciones
+            # Create variations based on the options
             if($options != null){
                 $sql .= ' '.getWhere($options);
             }
 
-            # Ordenar con los datos recibidos
+            # Sort with the received data
             $sql .= ' '.defineOrder($order, 'equipment');
             
-            # Agregar la paginaciÃ³n
+            # Add pagination
             $sql .= ' LIMIT :limit OFFSET :offset';
             
             #-------------------- PREPARAR Y EJECUTAR CONSULTA
             try{
-                # Preparamos la query con el string generado
+                # Prepare the query with the generated string
                 $query = Database::$connection->prepare($sql);
     
-                # Definimos los valores de los parametros
+                # Define the values of the parameters
                 $query->bindParam(':limit', $limit);
                 $query->bindParam(':offset', $offset);
                 
-                # Ejecutamos la consulta
+                # Execute the query
                 $query->execute();
-                # Obtenemos un array con los datos recibidos
+                # Get an array with the received data
                 $data = $query->fetchAll(PDO::FETCH_ASSOC);
                 
-                # Retornamos el valor para usarlo en proveedores.model.php
+                # Return the value to use it in proveedores.model.php
                 return $data;
             }
             catch(PDOException $error){
@@ -114,7 +113,7 @@
         static function getProviders(int $id, int $offset = 0, int $limit = 20)
         {
             
-            # Creamos la query con los parametros recibidos
+            # Create the query with the received parameters
             $sql="SELECT p.providerID, p.name 
                     FROM provider_equipment pe
                     JOIN provider p ON pe.providerID = p.providerID
@@ -122,20 +121,20 @@
                     LIMIT :limit
                     OFFSET :offset ";
             try{
-                # Preparamos la query con el string generado
+                # Prepare the query with the generated string
                 $query = Database::$connection->prepare($sql);
 
-                # Definimos los valores de los parametros
+                # Define the parameter values
                 $query->bindParam(':id', $id);
                 $query->bindParam(':limit', $limit);
                 $query->bindParam(':offset', $offset);
                 
-                # Ejecutamos  la consulta
+                # Execute the query
                 $query->execute();
-                # Obtenemos un array con los datos recibidos
+                # Obtain an array with the received data
                 $data = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                # Retornamos el valor para usarlo en proveedores.model.php
+                # Return the value to use it in proveedores.model.php
                 return $data;
             }
             catch(PDOException $error){
@@ -145,27 +144,26 @@
 
         static function getOne(int $id)
         { 
-            
-        
-            # Creamos la query con los parametros recibidos
+            # Create the query with the received parameters
             $sql="SELECT e.*, c.name as category
                 FROM equipment e 
                 JOIN category c ON e.categoryID = c.categoryID 
                 WHERE equipmentID = :id";
             
             try{
-                # Preparamos la query con el string generado
+                
+                # Prepare the query with the generated string
                 $query = Database::$connection->prepare($sql);
 
-                # Definimos los valores de los parametros
+                # Define the parameter values
                 $query->bindParam(':id', $id);
                 
-                # Ejecutamos  la cnsulta
+                # Execute the query
                 $query->execute();
-                # Obtenemos un array con los datos recibidos
+                # Obtain an array with the received data
                 $data = $query->fetch(PDO::FETCH_ASSOC);
                 
-                # Retornamos el valor para usarlo en proveedores.model.php
+                # Return the value to use it in proveedores.model.php
                 return $data;
             }
             catch(PDOException $error){
