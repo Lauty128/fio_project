@@ -20,19 +20,21 @@
     Flight::route('GET /equipments/@id', function($id){ \App\Controller\Equipments::getOne($id); });
     Flight::route('GET /equipments/@id/providers', function($id){ \App\Controller\Equipments::getProviders($id); });
     Flight::route('GET /equipments/@id/specifications', function($id){ \App\Controller\Equipments::getSpecifications($id); });
-    
+
     # Categories
     Flight::route('GET /categories', function(){ \App\Controller\Categories::getAll(); });
     Flight::route('GET /categories/@id', function($id){ \App\Controller\Categories::getAllByProvider($id); });
 
     # Backups
-    Flight::route('GET /backup/template', function(){ \App\Controller\Backup::template(); });
-    Flight::route('POST /backup/update', function(){ \App\Controller\Backup::update(); });
+    Flight::route('GET /backups', function(){ \App\Controller\Backup::getAll(); });
+    Flight::route('GET /backups/template', function(){ \App\Controller\Backup::downloadTemplate(); });
+    Flight::route('POST /backups/update', function(){ \App\Controller\Backup::submitFile(); });
+    Flight::route('GET /backups/update/file/@date', function($date){ \App\Controller\Backup::updateDatabase($date); });
 
     # Users
-    Flight::route('POST /auth', function(){ \App\Controller\Auth::login(); });
+    //Flight::route('POST /auth', function(){ \App\Controller\Auth::login(); });
 
-    
+
     # Not found page
     Flight::route('*', function(){
         $response = \App\Config\Config::DefineError('#-404', 'The requested endpoint is not found');
