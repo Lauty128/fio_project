@@ -3,6 +3,7 @@ client
 client/node_modules
 database
 api/vendor
+api/src/files/backups
 
 # files
 api/config/app.php
