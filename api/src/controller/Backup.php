@@ -28,7 +28,7 @@ class Backup{
     ########################################################################################################
     static function updateDatabase(string $date)
     {
-        $filePath = Files::getFilePath($date);
+        $filePath = Files::getBackupPath($date);
 
         if(!$filePath){
             Config\Config::DefineError('#-003','El archivo indicado no existe en el servidor');
@@ -40,6 +40,25 @@ class Backup{
     }
 
     ############################################################################################
+    ################### DELETE BACKUP ##########################################################
+    ############################################################################################
+    static function deleteBackup(string $date){
+        $backupPath = Files::getBackupPath($date);
+        $templatePath = Files::getTemplatePath($date);
+
+        if($backupPath){
+            BackupModel::deleteBackup($backupPath, $templatePath);
+            Flight::json([
+                'status' => 200,
+                'message' => 'El backup se elimino correctamente'
+            ]);
+        }
+        else{
+            Config\Config::DefineError('#-003','El archivo indicado no existe en el servidor');
+        }
+    }
+
+    ############################################################################################
     ################### CREATE BACKUP WITH RECEIVED FILE #######################################
     ############################################################################################
     static function submitFile()
@@ -48,10 +67,24 @@ class Backup{
             Config\Config::DefineError('#-003', 'No se envio ningun archivo o su nombre de identificacion es distinta de "file"');
         }
 
-        # Esta funcion, si se ejecuta correctamente, crea un backup en el servidor con la fecha actual
+        # If this function run correctly, creates a backup on server whit current date
         self::createBackup($_FILES['file']);
-        # Si no ocurre ningun error, la ejecucion continua y buscamos el nuevo backup en el servidor, para ejecutarlo en la base de datos
+        self::storeTemplate($_FILES['file']);
+
+        # If no have any error, the ejecution continues and search the new backup in the server, to ejecute this on DataBase
         self::updateDatabase(date('Y-m-d'));
+    }
+
+    static function storeTemplate(array $file){
+        $temp_url = $file['tmp_name'];
+
+        $url_file = __DIR__."/../files/templates/".date('Y-m-d')."__Template.xlsx";
+        if(file_exists($url_file)){ unlink($url_file); }
+
+        $template = fopen($url_file, 'w');
+
+        fwrite($template, file_get_contents($temp_url));
+        fclose($template);
     }
     
     # This function is responsible for creating and storing the backup.
@@ -84,29 +117,29 @@ class Backup{
         $url_file = __DIR__."/../files/backups/".date('Y-m-d')."__Backup.sql";
         if(file_exists($url_file)){ unlink($url_file); }
 
-        $file = fopen($url_file, 'w');
+        $backup = fopen($url_file, 'w');
 
-        fwrite($file, Config\Database::DROP_TABLES);
-        fwrite($file, "\n\n");
-        fwrite($file, Config\Database::CATEGORIES_STRUCTURE);
-        fwrite($file, "\n\n");
-        fwrite($file, $categoriesQuery);
-        fwrite($file, "\n\n");
-        fwrite($file, Config\Database::EQUIPMENTS_STRUCTURE);
-        fwrite($file, "\n\n");
-        fwrite($file, $equipmentsQuery);
-        fwrite($file, "\n\n");
-        fwrite($file, Config\Database::PROVIDERS_STRUCTURE);
-        fwrite($file, "\n\n");
-        fwrite($file, $providersQuery);
-        fwrite($file, "\n\n");
-        fwrite($file, Config\Database::PROVIDER_EQUIPMENT_STRUCTURE);
-        fwrite($file, "\n\n");
-        fwrite($file, $provider_equipmentQuery);
-        fwrite($file, "\n\n");
-        fwrite($file, Config\Database::RELATIONS_AND_CONFIGS);
+        fwrite($backup, Config\Database::DROP_TABLES);
+        fwrite($backup, "\n\n");
+        fwrite($backup, Config\Database::CATEGORIES_STRUCTURE);
+        fwrite($backup, "\n\n");
+        fwrite($backup, $categoriesQuery);
+        fwrite($backup, "\n\n");
+        fwrite($backup, Config\Database::EQUIPMENTS_STRUCTURE);
+        fwrite($backup, "\n\n");
+        fwrite($backup, $equipmentsQuery);
+        fwrite($backup, "\n\n");
+        fwrite($backup, Config\Database::PROVIDERS_STRUCTURE);
+        fwrite($backup, "\n\n");
+        fwrite($backup, $providersQuery);
+        fwrite($backup, "\n\n");
+        fwrite($backup, Config\Database::PROVIDER_EQUIPMENT_STRUCTURE);
+        fwrite($backup, "\n\n");
+        fwrite($backup, $provider_equipmentQuery);
+        fwrite($backup, "\n\n");
+        fwrite($backup, Config\Database::RELATIONS_AND_CONFIGS);
 
-        fclose($file);
+        fclose($backup);
     }
 
     ########################################################################################
@@ -163,6 +196,23 @@ class Backup{
         # This triggers the file download from the browser
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
+        exit();
+    }
+
+    static function downloadOldTemplate(string $date)
+    {
+        $template = Files::getTemplatePath($date);  
+        if(!$template){
+            Config\Config::DefineError('#-003','El archivo indicado no existe en el servidor');
+            exit();
+        }
+
+        $name = $template['filename'];
+        header('Content-Type: application/octet-stream');
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-disposition: attachment; filename=$name");
+
+        readfile($template['path']);
         exit();
     }
 }

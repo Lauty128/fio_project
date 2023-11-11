@@ -4,7 +4,6 @@ namespace App\Util\Backup;
 
 //----- Class
 use App\Config;
-use App\Model\Backup as BackupModel;
 
 //----- Dependencies
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;

@@ -32,7 +32,7 @@ class Backup{
     static function getAllBackups(){
         $dir = scandir(__DIR__."/../files/backups");
         unset($dir[0],$dir[1]);
-        return $dir;
+        return array_reverse($dir);
         # The following code can be used to return false if there are no backups
         // if(count($dir) > 2){
         //     unset($dir[0],$dir[1]);
@@ -43,12 +43,19 @@ class Backup{
         // }
     }
 
+    static function deleteBackup(array $backup, array | bool $template){
+        unlink($backup['path']);
+        if($template){
+            unlink($template['path']);
+        }
+    }
+
     static function updateDatabase(array $file)
     {
         $sql = file_get_contents($file['path']);
         
-        # Aqui no es necesario una transaccion, ya que solo se ejecuta una consulta.
-        # Aunque es muy grande la consulta, sigue siendo una sola y la transaccion se activa automaticamente para esa sola transaccion
+        # A transaction is not necessary here, since only one query is executed.
+        # Although the query is very large, it is still only one and the transaction is automatically activated for that single transaction
         $PDO = Database::$connection;
         //$PDO->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);
         //$PDO->beginTransaction();
@@ -62,10 +69,14 @@ class Backup{
             ];
         }
         catch(PDOException $error){
-            ## ELIMINAR EL ARCHIVO SQL DEL SERVIDOR, YA QUE TIENE ALGO MAL
-            # Deberia optimizarlo para que solo lo elimine si hay un error de sintaxis
-            # Puede haber un error en la conexion, pero la sintaxis estar bien
+            # DELETE THE SQL FILE FROM THE SERVER AS IT HAS SOMETHING WORNG
+            # (Deberia optimizarlo para que solo lo elimine si hay un error de sintaxis\\\\\\\\\\\\\\\\\\\\\\\\\\\
+            # Puede haber un error en la conexion, pero la sintaxis estar bien)
             unlink($file['path']);
+            $template_url = __DIR__.'/../files/templates/'.date('Y-m-d').'__Template.xlsx';
+            if(file_exists($template_url)){
+                unlink($template_url);
+            }
             //$PDO->rollBack();
             Config\Config::DefineError('#-001', $error->getMessage());
         }

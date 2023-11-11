@@ -7,7 +7,7 @@
     require __DIR__ . '/public/config.php';
     
     //-------------> Global Middlewares
-    Flight::Validate();
+    //Flight::Validate();
 
     //-------------> Routes
     # Providers
@@ -28,8 +28,10 @@
     # Backups
     Flight::route('GET /backups', function(){ \App\Controller\Backup::getAll(); });
     Flight::route('GET /backups/template', function(){ \App\Controller\Backup::downloadTemplate(); });
+    Flight::route('GET /backups/template/@date', function($date){ \App\Controller\Backup::downloadOldTemplate($date); });
     Flight::route('POST /backups/update', function(){ \App\Controller\Backup::submitFile(); });
     Flight::route('GET /backups/update/file/@date', function($date){ \App\Controller\Backup::updateDatabase($date); });
+    Flight::route('GET /backups/delete/@date', function($date){ \App\Controller\Backup::deleteBackup($date); });
 
     # Users
     //Flight::route('POST /auth', function(){ \App\Controller\Auth::login(); });
