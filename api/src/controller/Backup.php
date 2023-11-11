@@ -19,7 +19,11 @@ class Backup{
     static function getAll()
     {
         $dir = BackupModel::getAllBackups();
-        Flight::json([...$dir]);
+        $main = Files::getMainBackup();
+        Flight::json([
+            'main' => $main,
+            'files' => [...$dir]
+        ]);
         exit();
     }
 
@@ -34,7 +38,13 @@ class Backup{
             Config\Config::DefineError('#-003','El archivo indicado no existe en el servidor');
         }
 
+        // Execute the backup in the database
         $response = BackupModel::updateDatabase($filePath);
+
+        // If the backup is loaded successfully, then the main.txt is updated with this date
+        Files::changeMainBackup($date);
+
+        // Return the message response
         Flight::json($response);
         exit();
     }
@@ -49,7 +59,7 @@ class Backup{
         if($backupPath){
             BackupModel::deleteBackup($backupPath, $templatePath);
             Flight::json([
-                'status' => 200,
+                'code' => 200,
                 'message' => 'El backup se elimino correctamente'
             ]);
         }

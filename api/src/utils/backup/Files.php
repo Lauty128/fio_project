@@ -32,4 +32,25 @@ class Files{
         ];
     }
 
+    static function getMainBackup()
+    {
+        $mainPath = __DIR__."/../../files/backups/main";
+        $mainBackup = file_get_contents($mainPath);
+
+        return $mainBackup;
+    }
+
+    static function changeMainBackup($date):bool
+    {
+        try{
+            $mainPath = __DIR__."/../../files/backups/main";
+            $file = fopen($mainPath, 'w+');
+
+            fwrite($file, $date);
+            return true;
+        }
+        catch(Exception $e){
+            return false;
+        }
+    }
 }

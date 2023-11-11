@@ -31,16 +31,11 @@ class Backup{
 
     static function getAllBackups(){
         $dir = scandir(__DIR__."/../files/backups");
-        unset($dir[0],$dir[1]);
+        unset($dir[0],$dir[1]); // This removes the firsts files of the directory. | [0] => '.', [1] => '..'
+        array_pop($dir);    // This removes the latest file. This file is called "main.txt", wich indicates the main backup
+        
+        // The array is reversed for sending files ordered by date.
         return array_reverse($dir);
-        # The following code can be used to return false if there are no backups
-        // if(count($dir) > 2){
-        //     unset($dir[0],$dir[1]);
-        //     return $dir;
-        // }
-        // else{
-        //     return false;
-        // }
     }
 
     static function deleteBackup(array $backup, array | bool $template){
