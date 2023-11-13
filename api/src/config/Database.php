@@ -61,7 +61,7 @@
           `name` varchar(100) NOT NULL,
           `categoryID` int(10) NOT NULL,
           `umdns` varchar(20) DEFAULT NULL,
-          `description` varchar(400) DEFAULT NULL,
+          `description` TEXT DEFAULT NULL,
           `price` int(10) DEFAULT NULL,
           `specifications` varchar(150) DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
