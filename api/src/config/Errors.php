@@ -84,7 +84,7 @@ class Errors{
         ],
         '#-003' => [
             'http_code'=> 404,
-            'message'=> 'Ningun archivo recibido para analizar',
+            'message'=> 'Error al enviar el archivo',
             'user_error_title' => [
                 'es' => 'Error al enviar el archivo',
                 'en' => ''

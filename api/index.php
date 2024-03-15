@@ -7,7 +7,7 @@
     require __DIR__ . '/public/config.php';
     
     //-------------> Global Middlewares
-    //Flight::Validate();
+    Flight::Validate();
 
     //-------------> Routes
     # Providers

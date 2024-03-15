@@ -32,6 +32,7 @@
             $sql .= ' '.Util\Queries::defineOrder($order, 'equipment');
             
             # Add pagination
+            //$sql .= ' ORDER BY e.equipmentID';
             $sql .= ' LIMIT :limit OFFSET :offset';
             
         #-------------------- PREPARE AND EXECUTE QUERY

@@ -3,11 +3,11 @@
 
 # ----------- CONFIGURAR CORS
     /*
-    Cuando se envían encabezados personalizados, el navegador realiza una solicitud de preflight (OPTIONS) antes de la solicitud real. 
-    Asegúrate de que tu servidor PHP responda adecuadamente a estas solicitudes OPTIONS.
+    When sending custom headers, the browser realize an request of "preflight" (OPTIONS) before the real request.
+    Make sure your server responds correctly to this "OPTIONS" requests 
     */
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        // ESTO SOLUCIONA UN ERROR QUE SUCEDE AL ENVIAR CABECERAS DE AUTENTICACION
+        // This error solution ocurred when trying to send a autentication header
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
         header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -25,7 +25,7 @@
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 
-//---------> Definir timezone
+//---------> Define timezone
     date_default_timezone_set("America/Argentina/Buenos_Aires");
 
 
