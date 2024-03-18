@@ -7,39 +7,39 @@
 
     class Database{
         
-         # Viariable used to define the database connection
+         # La variable utilizada para definir la conexión a la base de datos
         public static PDO | null $connection = null;
 
-        # Variable used to set up data base connection
+        # Variable utilizada para configurar la conexión a la base de datos
         private static string $server = Config::DB_SERVER;
         private static string $dbname = Config::DB_NAME;
         private static string $user = Config::DB_USER;
         private static string $password = Config::DB_PASSWORD;
         
-        # Funtion to connect to the data base
+        # Función para conectar a la base de datos
         static function connect():void
         {
-            # config the connection with the dates of the class
-            # charset is used for forcing the type of charset. In this case utf8mb4
+            # configurar la conexión con las fechas de la clase
+            # charset se utiliza para forzar el tipo de juego de caracteres. En este caso utf8mb4
             if(self::$connection != null) return;
             try{
-                # config the connection with the dates of the class
-                # charset is used for forcing the type of charset. In this case utf8mb4
+                # configurar la conexión con las fechas de la clase
+                # charset se utiliza para forzar el tipo de juego de caracteres. En este caso utf8mb4
                 $conection = "mysql:host=".self::$server.";dbname=".self::$dbname.";charset=utf8mb4";
                 $options = [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_EMULATE_PREPARES => false, 
                            ];
                 
-                # Execute connection
+                # Executar conexion
                 $PDO = new PDO($conection, self::$user, self::$password, $options);
 
-                 # Assing to $connection the value of the object PDO
+                 # Asignando a $connection el valor del objeto PDO
                 self::$connection = $PDO;
             }
-            # In case of an error return a PDOExeption
+            # En caso de error, devuelve una PDOExeption
             catch(PDOException $error){
-                # Return a message error with the detail of the cod #-000 and the getMessage()
+                # Devuelve un mensaje de error con el detalle del cod#-000 y el getMessage()
                 Config::DefineError('#-000', $error->getMessage());
             }
         }

@@ -27,9 +27,9 @@ class Backup{
         exit();
     }
 
-    ########################################################################################################
-    ################### UPDATE THE DATABASE WITH A BACKUP OF THE SERVER ####################################
-    ########################################################################################################
+    #################################################################################################################
+    ################### ACTUALIZACION DE LA BASE DE DATOS CON EL BACKUP INDICADO ####################################
+    #################################################################################################################
     static function updateDatabase(string $date)
     {
         $filePath = Files::getBackupPath($date);
@@ -38,19 +38,19 @@ class Backup{
             Config\Config::DefineError('#-003','El archivo indicado no existe en el servidor');
         }
 
-        // Execute the backup in the database
+        // EJECUCION DEL BACKUP EN LA BASE DE DATOS
         $response = BackupModel::updateDatabase($filePath);
 
-        // If the backup is loaded successfully, then the main.txt is updated with this date
+        // SI EL BACKUPS ES ACTUALIZADO EXITOSAMENTE, ENTOCES EL MAIN.TXT ES MODIFICADO POR LA VARIABLE $DATE
         Files::changeMainBackup($date);
 
-        // Return the message response
+        // RETORNAR MENSAJE
         Flight::json($response);
         exit();
     }
 
     ############################################################################################
-    ################### DELETE BACKUP ##########################################################
+    ################### BORRADO DE BACKUP ######################################################
     ############################################################################################
     static function deleteBackup(string $date){
         $backupPath = Files::getBackupPath($date);
@@ -69,56 +69,65 @@ class Backup{
     }
 
     ############################################################################################
-    ################### CREATE BACKUP WITH RECEIVED FILE #######################################
+    ################### CREACION DEL BACKUP CON ARCHIVO XLSX ###################################
     ############################################################################################
     static function submitFile()
     {
+        # Se verifica la existenia de un archivo enviado y que sea mayor a 0 bytes
         if(!isset($_FILES['file']) || $_FILES['file']['size'] == 0){
             Config\Config::DefineError('#-003', 'No se envio ningun archivo o su nombre de identificacion es distinta de "file"');
         }
 
-        # If this function run correctly, creates a backup on server whit current date
+        # Si la funcion no se corta, se crea un backup en el servidor con la fecha actual
         self::createBackup($_FILES['file']);
+        # Y con esta funcion almacenamos el archivo xlsx, para tener el modelo con el que se creo el backup
         self::storeTemplate($_FILES['file']);
 
-        # If no have any error, the ejecution continues and search the new backup in the server, to ejecute this on DataBase
+        # Si no hay ningun error, la ejecucion continua y se busca el nuevo backup en el servidor para ejecutarlo en la base de datos
         self::updateDatabase(date('Y-m-d'));
     }
 
+    ############################################################################################
+    ################### ALMACENAR TEMPLATE EN EL SERVIDOR ######################################
+    ############################################################################################
     static function storeTemplate(array $file){
+        # Se obtiene la url temporal del archivo leido
         $temp_url = $file['tmp_name'];
 
+        # Se crea la URL con el archivo temporal obtenido y le asignamos el nombre de la fecha con la extension "__Template.xlsx" 
         $url_file = __DIR__."/../files/templates/".date('Y-m-d')."__Template.xlsx";
-        if(file_exists($url_file)){ unlink($url_file); }
+        if(file_exists($url_file)){ unlink($url_file); } # Si existe este archivo se elimina (Osea si ese mismo dia ya se habia creado uno)
 
+        # Abrimos el archivo creado con la flag "w" y le asignamos el contenido archivo temporal
         $template = fopen($url_file, 'w');
-
         fwrite($template, file_get_contents($temp_url));
         fclose($template);
     }
     
-    # This function is responsible for creating and storing the backup.
+    ############################################################################################
+    ################### CREAR Y ALMACENAR BACKUP ###############################################
+    ############################################################################################
     static function createBackup(array $file)
     {
         $temp_url = $file['tmp_name'];
     
         $spreadSheet = null;
         try{
-            //-----> The received file is read and formatted by IOFactory
+            //-----> El archivo recibido es leido por IOFactory
             $spreadSheet = IOFactory::load($temp_url);
         }
         catch(\Exception $e){
-            # If the received file is not of Excel type, an error is generated, and we execute the following code
+            # Si el archivo recibido no es del tipo Excel, generamo un error y ejecutamos el siguiente código
             //Config\Config::DefineError('#-003', 'El archivo recibido no es de tipo xlsx o el archivo esta corrompido');
             Config\Config::DefineError('#-003', $e->getMessage());
         }
         
-        //-----> Read the different sheets of the file
+        //----->Leer las diferentes hojas del expediente.
         $providers = $spreadSheet->getSheet(0)->toArray();
         $equipments = $spreadSheet->getSheet(1)->toArray();
         $categories = $spreadSheet->getSheet(2)->toArray();
         
-        //-----> Read the data from each sheet and create an INSERT INTO query for each table
+        //-----> Lee los datos de cada hoja y crea una consulta INSERT INTO para cada tabla
         $providersQuery = Reading::createProvidersQuery($providers);
         $equipmentsQuery = Reading::createEquipmentsQuery($equipments);
         $categoriesQuery = Reading::createCategoriesQuery($categories);
@@ -153,36 +162,36 @@ class Backup{
     }
 
     ########################################################################################
-    ################### CREATE AND DOWNLOAD TEMPLATE #######################################
+    ################### CREA Y DESCARGA EL TEMPLATE #######################################
     ########################################################################################
     static function downloadTemplate()
     {
-        # Config teh file 
+        # Configurar el archivo 
         $spreadsheet = new Spreadsheet();
         $spreadsheet->getProperties()
                 ->setCreator('ProveeMed')
                 ->setTitle('Template para actualizar la base de datos');
 
-        # Define the first page and mark it as active
+        # Define la primera pagina y marca si esta activa
         $activeSheet = $spreadsheet->getActiveSheet();
-        # Give a name to the page
+        # Se indica el nombre a la pagina
         $activeSheet->setTitle('Proveedores');
         
         $providers_data = BackupModel::getAllData(BackupModel::Providers_SQL);
         $equipmentsByProviders_data = BackupModel::getAllData(BackupModel::EquipmentsByProvider_SQL);
 
-        # On that active page, create the providers' header and print the providers
+        # En esa pagina activa, crea el encabezado de los proveedores e imprime los proveedores
         Generator::header($activeSheet,'provider');
         Generator::writeProviders($activeSheet, $providers_data, $equipmentsByProviders_data);
     
-        # When a new page is created, it is automatically set as active
-        # This allows us to avoid using the function $spreadsheet->getActiveSheet()
+        #Cuando la nueva pagina es creada, es seteada actomaticamente como selectiva
+        # Esto nos permite evitar el uso de la funcion $spreadsheet->getActiveSheet()
         $equipmentsSheet = $spreadsheet->createSheet(1);
         $equipmentsSheet->setTitle('Equipos');
 
         $equipments_data = BackupModel::getAllData(BackupModel::Equipments_SQL);
 
-        # We send the parameter $equipmentsSheet to access and modify the second sheet
+        # Enviamos el parametro $equipmentsSheet para acceder y modificar la siguienteaCreamoes el encabezxjoho a
         # We create the header and the list of equipment on the second page
         Generator::header($equipmentsSheet, 'equipment');
         Generator::writeEquipments($equipmentsSheet, $equipments_data);
@@ -198,30 +207,37 @@ class Backup{
 
         //$writer = new Xlsx($spreadsheet);
 
-        # These headers allow us to configure the file download
+        # Estas cabeceras permiten configurar la descarga  del archivo
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="ProveeMed.xlsx"');
         //header('Cache-Control: max-age=0');
     
-        # This triggers the file download from the browser
+        # Esto activa la descarga del archivo desde el navegador.
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
         exit();
     }
 
+    ##############################################################################################
+    ################### DESCARGAR UN TEMPLATE DEL SERVIDOR #######################################
+    ##############################################################################################
     static function downloadOldTemplate(string $date)
     {
+        # Se obtiene el template con el $date indicado
         $template = Files::getTemplatePath($date);  
         if(!$template){
+            # Si no lo encuentra se corta la funcion y se retorna un error
             Config\Config::DefineError('#-003','El archivo indicado no existe en el servidor');
             exit();
         }
 
+        # Se almacena el nombre del template y se configuran las cabeceras para descargarlo
         $name = $template['filename'];
         header('Content-Type: application/octet-stream');
         header("Content-Transfer-Encoding: Binary");
         header("Content-disposition: attachment; filename=$name");
 
+        # Se lee el contenido del archivo para ejecutar la descarga
         readfile($template['path']);
         exit();
     }

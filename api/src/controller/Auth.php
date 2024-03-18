@@ -2,7 +2,7 @@
 
     namespace App\Controller;
 
-    # Import code
+    # Importar codigo
     use Flight;
 
     class Auth{

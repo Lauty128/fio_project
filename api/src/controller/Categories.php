@@ -2,7 +2,7 @@
 
     namespace App\Controller;
 
-    //-----> Classes of the project
+    //-----> Clases del proyecto
     use App\Model;
 
     //-----> Dependencies
@@ -11,18 +11,17 @@
     class Categories{
         
         static function getAll() { 
-            # Storege the result of the function getAll() 
-            
+            # Almacenar el resultado de la función getAll()
             $data = Model\Categories::getAll();
 
-            # Return the value to be used in index.php
+            # Retorna el valor que fue utilizado en index.php
             Flight::json($data);
             exit();
         }
 
         static function getAllByProvider(string $id, bool $is_verified = false) { 
-            # Verify if the searched provider exists
-            # If $is_verified is true, means we verified provider existence previusly
+            # Verifica si exite el proveedor buscado 
+            # Si $is_verified es verdadero, decimo que la existencia del proveedor fue validada previamente
             $verification = ($is_verified)
                 ? $is_verified
                 : Model\Providers::getOne($id);

@@ -2,7 +2,7 @@
 
     namespace App\Controller;
 
-    //-----> Classes of the project
+    //-----> Classes
     use App\Util;
     use App\Model;
     use App\Config;
@@ -12,9 +12,9 @@
 
     class Equipments{
 
-        ################################################################
-        ######################### GET ALL ##############################
-        ################################################################
+        #################################################################################
+        ######################### OBTENER TODOS LOS EQUIPOS #############################
+        #################################################################################
         static function getAll()
         { 
         //-------------- Detectar queries
@@ -41,8 +41,8 @@
                 ? count($data)
                 : Model\Equipments::getTotal($options);
             
-            # If an error occurred the code execution is cut off and an error message is returned
-            # The code is prepare for returning a success response
+            # Si un error ocurre se detiene la ejecucion del codigo y se devuelve un mensaje de error.
+            # El codigo esta preparado para devolver una respuesta de exito.
             Flight::json([
                 'page' => ((int)$page + 1),
                 'limit' => (int)$limit,
@@ -54,9 +54,9 @@
             exit();
         }
 
-        #################################################################
-        ################## GET PROVIDERS BY AN EQUIPMENT ################
-        #################################################################
+        ############################################################################
+        ################## OBTENER PROVEEDORES QUE VENDEN UN EQUIPO ################
+        ############################################################################
         static function getProviders(int $id)
         {
         //-------------- Detectar queries
@@ -89,9 +89,9 @@
             exit();    
         }
 
-        ################################################################
-        ######################### GET ONE ##############################
-        ################################################################
+        ##########################################################################
+        ######################### OBTENER UN EQUIPO ##############################
+        ##########################################################################
         static function getOne(int $id)
         {
         //------------- Ejecutar consulta
@@ -121,19 +121,19 @@
             if(file_exists($path)){
                 $custom_filename = $equipment['name'].'.'. explode('.', $filename)[1];
 
-                // Define headers
+                // Headers definidos para la descarga correcta del archivo
                 header("Cache-Control: public");
                 header("Content-Description: File Transfer");
                 header("Content-Disposition: attachment; filename=$custom_filename");
                 header("Content-Type: application/zip");
                 header("Content-Transfer-Encoding: binary");
                 
-                // Read the file
+                // LEER EL DOCUMENTO
                 readfile($path);
                 exit();
             }
             else{
-                Config\Config::DefineError('#-002', 'The equipment specifications file was not found');
+                Config\Config::DefineError('#-002', 'Las especificaciones del equipo no fueron encontradas');
             }
             
         }

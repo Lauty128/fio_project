@@ -18,9 +18,11 @@ class Generator{
     static function header(Worksheet $workSheet, string $table):void
     {
         # This help us to add rows of dynamic form.
+        # Esto ayuda a agregar filas de una forma dinamica
         $columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','O'];
         
         # If the table isn't 'provider', or 'equipment', then we will end the function.
+        # Si la tabla no es 'provider' o 'equipments', entonces la funcion terminara
         if(!isset(Config\Config::HEADER_FIELDS[$table])) return; 
 
         # Field, of row of 1, at height of 20

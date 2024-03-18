@@ -37,7 +37,7 @@
     //Flight::route('POST /auth', function(){ \App\Controller\Auth::login(); });
 
 
-    # Not found page
+    # Not found pagina
     Flight::route('*', function(){
         $response = \App\Config\Config::DefineError('#-404', 'The requested endpoint is not found');
         Flight::json($response);

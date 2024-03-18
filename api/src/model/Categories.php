@@ -13,17 +13,16 @@
 
         static function getAll()
         {
-            # We create the query with the received parameters
+            # Crear Consulta SQL
             $sql = 'SELECT * FROM category';
             
             try{
-                # We prepare the query with the generated string
+                # Se prepara y ejecuta la consulta
                 $query = Config\Database::$connection->query($sql);
-                
-                # We obtain an array with the received data
                 $data = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                # We return the value to use it in providers.model.php
+                # El valor es retornado 
+                // @data > Array | false
                 return $data;
             }
             catch(PDOException $error){
@@ -33,7 +32,7 @@
 
         static function getAllByProvider($id)
         {
-            # We create the query with the received parameters
+            # Creamos la consulta con los parámetros recibidos
             $sql = 'SELECT DISTINCT c.categoryID,c.name FROM provider p
             JOIN provider_equipment pe ON p.providerID = pe.providerID
             JOIN equipment e ON e.equipmentID = pe.equipmentID
@@ -41,18 +40,18 @@
             WHERE pe.providerID = :id';
             
             try{
-                # We prepare the query with the generated string
+                # Creamos la consulta con la cadena generada
                 $query = Config\Database::$connection->prepare($sql);
 
-                # We define the parameter values
+                # Definimos los valores de los parámetros
                 $query->bindParam(':id', $id);
 
-                # We execute the query
+                # Ejecutamos la consulta
                 $query->execute();
-                # We obtain an array with the received data
+                # Obtenemos un array con los datos obtenidos
                 $data = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                # We return the value to use it in providers.model.php
+                # Devolvemos el valor para usarlo en providers.model.php
                 return $data;
             }
             catch(PDOException $error){

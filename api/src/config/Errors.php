@@ -7,13 +7,13 @@ class Errors{
     const all = [
         // -------------------------------------------------------------------------------------
         // '#-000' => [
-        //     'http_code'=> <integer>, // INDICATES THE CODE HTTP RETURNED BY THE REQUEST
-        //     'message'=> <string>, // MESSAGE INDICATES THE ERROR FOR THE DEVELOPERS
+        //     'http_code'=> <integer>, // Indica el codigo http devuelto por el solicitud.
+        //     'message'=> <string>, // MESSAGE Indica el error para los desarrolladores.
         // 
-        //     'user_error_title' => [ // user_error_title INDICATES THE TITTLE ERROR THAT THE USER RECIBE
+        //     'user_error_title' => [ // user_error_title  Indica el titulo del error que recibe el usuario.
         //         'es' => <string>
         //         'en' => <string>
-        //     'user_error_message' => [ //user_error_message INDICATES THE MESSAGE THAT THE USER RECIBE 
+        //     'user_error_message' => [ //user_error_message Indica el mensaje que recibe el usuario.
         //         'es' => <string> ,
         //         'en' => <string>
         //     ]
@@ -109,7 +109,7 @@ class Errors{
     ];
     //con el codigo generado por paremetro obtenemos todo el mensaje de error
     /*Function getErrorMessage
-     *Recibe as a parameter the genereted code and return the complete message error.
+     * Recibe como parametro el codigo generado y devuelve el mensaje de error completo.
      */
     static function getErrorMessage(string $code): Array | false
     {

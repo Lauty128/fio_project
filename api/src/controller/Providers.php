@@ -22,7 +22,7 @@
             $page = (isset($_GET['page']) && ($_GET['page'] > 0)) ? ($_GET['page'] - 1) : Config\Config::PAGE;
             $limit = (isset($_GET['limit'])) ? $_GET['limit'] : Config\Config::LIMIT;
 
-        //------------- Manipular queries
+        //-------------  queries
             # Definimos un orden por defecto o el recibido por los parametros
             $order = (isset($_GET['order'])) ? Util\Parameters::formaterOrder($_GET['order']) : Config\Config::ORDER;
             
@@ -42,7 +42,7 @@
                 ? count($data)
                 : Model\Providers::getTotal($options);
             
-            # The code is prepare for returning a success response
+            # El codigo esta el elemento
             Flight::json([
                 'page' => ((int)$page + 1),
                 'limit' => (int)$limit,
@@ -55,7 +55,7 @@
         }
 
         ################################################################
-        ################# GET EQUIPMENTS BY A PROVIDER #################
+        ################# OBTENER EQUIPOS POR PROVEDORES #################
         ################################################################
         static function getEquipments(int $id)
         {
@@ -72,7 +72,6 @@
             if($provider === false){
                 Config\Config::DefineError('#-002', 'No existe el proveedor solicitado');
             }
-            
 
             # Almacenamos el resultado de la funcion getEquipments() mandando los parametros que pide
             $data = Model\Providers::getEquipments($id, $offset, $limit);
@@ -95,7 +94,7 @@
         }
 
         ################################################################
-        ######################### GET ONE ##############################
+        ######################### OBTENER UN PROVEEDOR##############################
         ################################################################
         static function getOne(int $id)
         {
@@ -112,8 +111,8 @@
             # que contiene un array con todos los equipos que vende el proveedor
             Flight::json([
                 /*
-                EN CASO DE NO TENER LA VERSION MAS ACTUALIZADA DE PHP
-                REEMPLAZAR "...$providers," POR:
+                EN CASO DE NO TENER LA VERSION MAS ACTUALIZADA DE PHP REEMPLAZAR
+                "...$providers," POR:
                 "name" => $provider["name"],
                 "web" => $provider["web"],
                 "mail" => $provider["mail"],

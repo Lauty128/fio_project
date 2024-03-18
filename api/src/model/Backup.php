@@ -6,7 +6,7 @@ use App\Config;
 use App\Config\Database;
 use PDO, PDOException;
 
-#----- DataBase Connection
+#----- Conexion a base de datos
 Config\Database::connect();
 
 class Backup{
@@ -31,10 +31,10 @@ class Backup{
 
     static function getAllBackups(){
         $dir = scandir(__DIR__."/../files/backups");
-        unset($dir[0],$dir[1]); // This removes the firsts files of the directory. | [0] => '.', [1] => '..'
-        array_pop($dir);    // This removes the latest file. This file is called "main.txt", wich indicates the main backup
+        unset($dir[0],$dir[1]); // Remueve los primeros archivos del directorio | [0] => '.', [1] => '..' 
+        array_pop($dir);  // Elimina el ultimo archivo. Este archivo se llama "main.txt", este indica el main back up.
         
-        // The array is reversed for sending files ordered by date.
+        // Recorro el array al reves para enviar los archivos ordenados por fecha. 
         return array_reverse($dir);
     }
 
@@ -49,14 +49,12 @@ class Backup{
     {
         $sql = file_get_contents($file['path']);
         
-        # A transaction is not necessary here, since only one query is executed.
-        # Although the query is very large, it is still only one and the transaction is automatically activated for that single transaction
+        # Una transacccion no es necesaria aqui, ya que solo se ejecuta una consulta.
         $PDO = Database::$connection;
         //$PDO->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);
         //$PDO->beginTransaction();
         try{
             $PDO->exec($sql);
-
             //$PDO->commit();
             return [
                 'code' => 200,
@@ -64,7 +62,7 @@ class Backup{
             ];
         }
         catch(PDOException $error){
-            # DELETE THE SQL FILE FROM THE SERVER AS IT HAS SOMETHING WORNG
+            # BORRA el archivo SQL del servidor si tiene algun error
             # (Deberia optimizarlo para que solo lo elimine si hay un error de sintaxis\\\\\\\\\\\\\\\\\\\\\\\\\\\
             # Puede haber un error en la conexion, pero la sintaxis estar bien)
             unlink($file['path']);
@@ -81,15 +79,15 @@ class Backup{
     static function getAllData(string $SQL)
     {
         try{
-            # We prepare the query with the generated string
+            # Preparamos la consulta con el generador string
             $query = Config\Database::$connection->prepare($SQL);
 
-            # We execute the query
+            # Ejecutamos la consulta
             $query->execute();
-            # We obtain an array with the received data
+            # Obtenemos un arreglo con los datos recibidos 
             $data = $query->fetchAll(PDO::FETCH_ASSOC);
 
-            # We return the value to use it in providers.model.php
+            # Devuelve el valor para usarlo en providers.model.php
             return $data;
         }
         catch(PDOException $error){

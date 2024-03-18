@@ -18,20 +18,18 @@ class Queries{
         if(count($options) > 0){ $index = 0; }
     
         foreach ($options as $option) {
-                # If this position is equal to 0(zero), then a 'WHERE' is added
+                # Si la posicion es igual a 0, estonces un "WHERE" se agrega.
                 if($index == 0){ $where .= "WHERE "; }
                 
                 $where .= $option['table']." ".$option['equal']." ".$option['value'];
                 
-                # If this position isn't the last, then an 'AND' is added
+                # Si esta posicion no es la ultuma, entonces un "AND" es agregado para continuar al siguiente WHERE
                 if($index < (count($options) - 1)){ $where .= " AND "; }  
                 
-                # Index is equal to index + 1
+                # A $index le sumamos 1
                 $index++;
         }
     
-        //var_dump($where);
-        //exit();
         return $where;
     }   
     
@@ -105,5 +103,3 @@ class Queries{
         return $orderTypes[$table][$order];
     }
 }
-
-
