@@ -4,7 +4,7 @@ namespace App\Util\Backup;
 
 //----- Class
 use App\Config;
-
+use Flight;
 //----- Dependencies
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
@@ -62,22 +62,31 @@ class Generator{
          # We align (horizontally) all of fields on the left. 
          $workSheet->getStyle('A1:F'.(count($providers) + 1))
          ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
-
+        
+         
         for ($i=2; $i <= (count($providers) + 1); $i++)
         {     
             $workSheet->getRowDimension($i)
             ->setRowHeight(20);
-
-            $workSheet->setCellValue('A'.$i, $providers[$i-2]['providerID']);
+            
+            $workSheet->setCellValue('A'.$i, $providers[$i-2]['id']);
             $workSheet->setCellValue('B'.$i, $providers[$i-2]['name']);
-            $workSheet->setCellValue('C'.$i, $providers[$i-2]['mail']);
-            $workSheet->setCellValue('D'.$i, $providers[$i-2]['web']);
-            $workSheet->setCellValue('E'.$i, $providers[$i-2]['address']);
-            $workSheet->setCellValue('F'.$i, $providers[$i-2]['phone']);
-            $workSheet->setCellValue('G'.$i, $equipments[$i-2]['equipments']);
+            $workSheet->setCellValue('C'.$i, $providers[$i-2]['bussinees_name']);
+            $workSheet->setCellValue('D'.$i, $providers[$i-2]['identification_type']);
+            $workSheet->setCellValue('E'.$i, $providers[$i-2]['identification_num']);
+            $workSheet->setCellValue('F'.$i, $providers[$i-2]['email']);
+            $workSheet->setCellValue('G'.$i, $providers[$i-2]['phone']);
+            $workSheet->setCellValue('H'.$i, $providers[$i-2]['web']);
+            $workSheet->setCellValue('I'.$i, $providers[$i-2]['location_id']);
+            $workSheet->setCellValue('J'.$i, $providers[$i-2]['address']);
+            $workSheet->setCellValue('K'.$i, $providers[$i-2]['isAccount']);
+            $workSheet->setCellValue('L'.$i, $providers[$i-2]['available']);
+            $workSheet->setCellValue('M'.$i, $providers[$i-2]['password']);
+            $workSheet->setCellValue('N'.$i, $equipments[$i-2]['equipments']);
         }
 
     }
+
 
     /**
      * Read DataBase and writes on workpage the list of equipments, whit her data.
@@ -94,9 +103,9 @@ class Generator{
             $workSheet->getRowDimension($i)
             ->setRowHeight(20);
 
-            $workSheet->setCellValue('A'.$i, $equipments[$i-2]['equipmentID']);
+            $workSheet->setCellValue('A'.$i, $equipments[$i-2]['id']);
             $workSheet->setCellValue('B'.$i, $equipments[$i-2]['name']);
-            $workSheet->setCellValue('C'.$i, $equipments[$i-2]['categoryID']);
+            $workSheet->setCellValue('C'.$i, $equipments[$i-2]['category_id']);
             $workSheet->setCellValue('D'.$i, $equipments[$i-2]['umdns']);
             $workSheet->setCellValue('E'.$i, $equipments[$i-2]['description']);
             $workSheet->setCellValue('F'.$i, $equipments[$i-2]['price']);
@@ -115,8 +124,9 @@ class Generator{
             $workSheet->getRowDimension($i)
             ->setRowHeight(20);
 
-            $workSheet->setCellValue('A'.$i, $categories[$i-2]['categoryID']);
+            $workSheet->setCellValue('A'.$i, $categories[$i-2]['id']);
             $workSheet->setCellValue('B'.$i, $categories[$i-2]['name']);
+            $workSheet->setCellValue('C'.$i, $categories[$i-2]['description']);
         }
 
     }

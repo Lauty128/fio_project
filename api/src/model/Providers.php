@@ -20,33 +20,35 @@
             # Creamos la consulta con los parámetros recibidos
             $sql = (isset($options['equipments']))
                 # Si el filtro de equipo existe, agregamos un campo más para mostrar y realizamos un JOIN con la tabla 'provider_equipment'
-                ? 'SELECT DISTINCT p.*, count(pe.providerID) as equipment
-                    FROM provider p
-                    JOIN provider_equipment pe ON pe.providerID = p.providerID'
+                ? 'SELECT DISTINCT p.*, count(pe.provider_id) as equipment
+                    FROM users p
+                    JOIN provider_equipments pe ON pe.provider_id = p.id'
                 # Si no existe, realizamos un SELECT simple
-                :  'SELECT DISTINCT p.* FROM provider p';
+                :  'SELECT DISTINCT p.* FROM users p';
 
             # Si existen los filtros de categoría y equipo, solo agregamos un JOIN a la tabla 'equipment'
             if(isset($options['category']) && isset($options['equipments'])){
-                $sql .= " JOIN equipment e ON e.equipmentID = pe.equipmentID";
+                $sql .= " JOIN equipments e ON e.id = pe.equipment_id";
             }
             # Si el filtro de equipo no existe pero el filtro de categoría sí, realizamos un JOIN en ambas tablas
             elseif(isset($options['category'])){
-                $sql .= " INNER JOIN provider_equipment pe ON pe.providerID = p.providerID
-                INNER JOIN equipment e ON e.equipmentID = pe.equipmentID";
+                $sql .= " INNER JOIN provider_equipments pe ON pe.provider_id = p.id
+                INNER JOIN equipments e ON e.id = pe.equipment_id";
             }
 
+            $sql .= " WHERE user_type_id = 3";
+
             # Crear variaciones basadas en las opciones
-            if($options != null){
-                $sql .= ' '.Util\Queries::getWhere($options);
-            }
+            // if($options != null){
+            //     $sql .= ' '.Util\Queries::getWhere($options);
+            // }
             
             # Ordenar con los datos recibidos
-            $sql .= ' '.Util\Queries::defineOrder($order, 'provider');
+            $sql .= ' '.Util\Queries::defineOrder($order, 'users');
 
             # Si queremos obtener el total de equipos vendidos, debemos agrupar los resultados
             if(isset($options['equipments'])){
-                $sql .= ' GROUP BY p.providerID';
+                $sql .= ' GROUP BY p.id';
             }
 
             # Agregar paginación
@@ -135,16 +137,17 @@
         static function getTotal(array | null $options):int | array
         {
             # Creamos la consulta
-            $sql = 'SELECT COUNT(DISTINCT p.providerID) as total FROM provider p';
+            $sql = 'SELECT COUNT(DISTINCT p.id) as total FROM users p';
             
             if(isset($options['category'])){
-                $sql .= ' INNER JOIN provider_equipment pe ON pe.providerID = p.providerID
-                INNER JOIN equipment e ON pe.equipmentID = e.equipmentID';
+                $sql .= " INNER JOIN provider_equipments pe ON pe.providerID = p.providerID
+                INNER JOIN equipments e ON pe.equipment_id = e.id";
             }
 
-            if($options != null){
-                $sql .= ' '.Util\Queries::getWhere($options);
-            }
+            $sql .= " WHERE user_type_id = 3";
+            // if($options != null){
+            //     $sql .= ' '.Util\Queries::getWhere($options);
+            // }
             
             try{
                 # Executamos la consulta
@@ -163,9 +166,9 @@
 
         static function getTotalByEquipments(string $id):int | array
         {# Creamos la consulta
-            $sql = 'SELECT COUNT(pe.providerID) as total FROM provider p
-            JOIN provider_equipment pe ON p.providerID = pe.providerID
-            WHERE pe.providerID = :id';
+            $sql = 'SELECT COUNT(pe.providerID) as total FROM users p
+            JOIN provider_equipments pe ON p.id = pe.provider_id
+            WHERE pe.provider_id = :id';
 
              try{
                 # Preparar consulta

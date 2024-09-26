@@ -6,7 +6,8 @@
     use App\Util;
     use PDO, PDOException;
     use App\Config;
-    
+use Flight;
+
     #----- Conexion de la base de Datos
     Config\Database::connect();
 
@@ -19,22 +20,24 @@
             
         #------------------- CREAR CONSULTA
             # Creamos la consulta con los parametros recibidos
-            $sql = 'SELECT e.equipmentID, e.name, e.categoryID, c.name as category 
-                FROM equipment e
-                JOIN category c ON e.categoryID = c.categoryID';
+            $sql = 'SELECT e.id, e.name, e.category_id, c.name as category 
+                FROM equipments e
+                JOIN categories c ON e.category_id = c.id';
             
             # Creamos variaciones basadas en la opciones
             if($options != null){
-                $sql .= ' '.Util\Queries::getWhere($options);
+                //$sql .= ' '.Util\Queries::getWhere($options);
             }
 
             # Ordenar con los datos
-            $sql .= ' '.Util\Queries::defineOrder($order, 'equipment');
+            $sql .= ' '.Util\Queries::defineOrder($order, 'equipments');
             
             # Agragar paginacion
             //$sql .= ' ORDER BY e.equipmentID';
             $sql .= ' LIMIT :limit OFFSET :offset';
-            
+
+            // Flight::json($sql);
+            // exit();
         #-------------------- PREPARAR Y EJECUTAR CONSULTA
             try{
                 # Preparamos la consulta con la cadena generada
@@ -148,10 +151,10 @@
         static function getTotal(null | array $options):int | array
         {
             
-            $sql = 'SELECT COUNT(e.equipmentID) as total FROM equipment e';
+            $sql = 'SELECT COUNT(e.id) as total FROM equipments e';
                 # Crear variaciones basadas en las opciones
             if(isset($options['category'])){
-                $sql .= ' JOIN category c ON e.categoryID = c.categoryID';
+                $sql .= ' JOIN categories c ON e.category_id = c.id';
             }
 
             if($options != null){

@@ -80,16 +80,16 @@ class Queries{
     static function defineOrder(string $order, string $table){
         # Los distintos tipos de ordenes para cada tabla (algunos son bastantes parecidos)
         $orderTypes = [
-            'provider' => [
-                'ID-ASC' => 'ORDER BY p.providerID ASC',
-                'ID-DESC' => 'ORDER BY p.providerID DESC',
+            'users' => [
+                'ID-ASC' => 'ORDER BY p.id ASC',
+                'ID-DESC' => 'ORDER BY p.id DESC',
                 'N-ASC' => 'ORDER BY p.name ASC',
                 'N-DESC' => 'ORDER BY p.name DESC',
                 'default' => 'ORDER BY p.name ASC'
             ],
-            'equipment' => [
-                'ID-ASC' => 'ORDER BY e.equipmentID ASC',
-                'ID-DESC' => 'ORDER BY e.equipmentID DESC',
+            'equipments' => [
+                'ID-ASC' => 'ORDER BY e.id ASC',
+                'ID-DESC' => 'ORDER BY e.id DESC',
                 'N-ASC' => 'ORDER BY e.name ASC',
                 'N-DESC' => 'ORDER BY e.name DESC',
                 'default' => 'ORDER BY e.name ASC'

@@ -12,21 +12,22 @@ Config\Database::connect();
 class Backup{
 
     const Providers_SQL = "SELECT * 
-                FROM provider 
-                ORDER BY providerID ASC";
+                FROM users
+                WHERE user_type_id = 3
+                ORDER BY id ASC";
 
     const Equipments_SQL = "SELECT * 
-                FROM equipment 
-                ORDER BY equipmentID ASC";
+                FROM equipments 
+                ORDER BY id ASC";
 
     const Categories_SQL = "SELECT * 
-                FROM category
-                ORDER BY categoryID";
+                FROM categories
+                ORDER BY id ASC";
 
-    const EquipmentsByProvider_SQL = "SELECT pe.providerID, GROUP_CONCAT(pe.equipmentID) AS equipments 
-                FROM provider_equipment pe 
-                GROUP BY pe.providerID 
-                ORDER BY pe.providerID";
+    const EquipmentsByProvider_SQL = "SELECT pe.provider_id, GROUP_CONCAT(pe.equipment_id) AS equipments 
+                FROM provider_equipments pe 
+                GROUP BY pe.provider_id 
+                ORDER BY pe.provider_id";
 
 
     static function getAllBackups(){
