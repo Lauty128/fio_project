@@ -138,25 +138,25 @@ class Backup{
 
         $backup = fopen($url_file, 'w');
 
-        fwrite($backup, Config\Database::DROP_TABLES);
+        fwrite($backup, Config\Database::DROP_TABLES); # Dropear todas las tablas
         fwrite($backup, "\n\n");
-        fwrite($backup, Config\Database::CATEGORIES_STRUCTURE);
+        fwrite($backup, Config\Database::CATEGORIES_STRUCTURE); # Crear tabla de categorias
         fwrite($backup, "\n\n");
-        fwrite($backup, $categoriesQuery);
+        fwrite($backup, $categoriesQuery); # Cargar tabla de categorias
         fwrite($backup, "\n\n");
-        fwrite($backup, Config\Database::EQUIPMENTS_STRUCTURE);
+        fwrite($backup, Config\Database::EQUIPMENTS_STRUCTURE); # Crear tabla de equipos medicos
         fwrite($backup, "\n\n");
-        fwrite($backup, $equipmentsQuery);
+        fwrite($backup, $equipmentsQuery); # Cargar tabla de equipos medicos
         fwrite($backup, "\n\n");
-        fwrite($backup, Config\Database::PROVIDERS_STRUCTURE);
+        fwrite($backup, Config\Database::PROVIDERS_STRUCTURE); # Crear tabla de proveedores
         fwrite($backup, "\n\n");
-        fwrite($backup, $providersQuery);
+        fwrite($backup, $providersQuery); # Cargar tabla de proveedores
         fwrite($backup, "\n\n");
-        fwrite($backup, Config\Database::PROVIDER_EQUIPMENT_STRUCTURE);
+        fwrite($backup, Config\Database::PROVIDER_EQUIPMENT_STRUCTURE); # Crear tabla intermedia entre proveedores y equipos medicos
         fwrite($backup, "\n\n");
-        fwrite($backup, $provider_equipmentQuery);
+        fwrite($backup, $provider_equipmentQuery); # Cargar tabla intermedia
         fwrite($backup, "\n\n");
-        fwrite($backup, Config\Database::RELATIONS_AND_CONFIGS);
+        fwrite($backup, Config\Database::RELATIONS_AND_CONFIGS); # Definir relaciones y configuraciones
 
         fclose($backup);
     }
@@ -184,7 +184,7 @@ class Backup{
         Generator::header($activeSheet,'provider');
         Generator::writeProviders($activeSheet, $providers_data, $equipmentsByProviders_data);
     
-        #Cuando la nueva pagina es creada, es seteada actomaticamente como selectiva
+        # Cuando la nueva pagina es creada, es seteada automaticamente como la pagina seleccionada para trabajar
         # Esto nos permite evitar el uso de la funcion $spreadsheet->getActiveSheet()
         $equipmentsSheet = $spreadsheet->createSheet(1);
         $equipmentsSheet->setTitle('Equipos');

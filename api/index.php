@@ -2,13 +2,24 @@
     
     //-------------> Dependencies 
     # Autoload
+
+    
     require __DIR__ . '/vendor/autoload.php';
+    
+    // $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    // $dotenv->load();
+
     # Configs
     require __DIR__ . '/public/config.php';
     
     //-------------> Global Middlewares
-    Flight::Validate();
-
+    //Flight::Validate();
+    
+    // use Illuminate\Hashing\BcryptHasher;
+    // $hasher = new BcryptHasher();
+    // var_dump($hasher->check('123', '$2y$10$hH7cOCRaJnG4ki1fdRmuA.KQVyETT8NcE2J5ICZx6oMfU5bYWMIM6'));
+    // exit();
+    
     //-------------> Routes
     # Providers
     Flight::route('GET /providers', function(){ \App\Controller\Providers::getAll(); });
@@ -17,6 +28,7 @@
     
     # Equipments
     Flight::route('GET /equipments', function(){ \App\Controller\Equipments::getAll(); });
+    Flight::route('GET /equipments/template', function(){ \App\Controller\Equipments::getTemplate(); });
     Flight::route('GET /equipments/@id', function($id){ \App\Controller\Equipments::getOne($id); });
     Flight::route('GET /equipments/@id/providers', function($id){ \App\Controller\Equipments::getProviders($id); });
     Flight::route('GET /equipments/@id/specifications', function($id){ \App\Controller\Equipments::getSpecifications($id); });

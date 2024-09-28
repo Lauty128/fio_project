@@ -63,11 +63,11 @@
             ],
             'equipment' => [
                 'ID',
+                ['value' => 'Imagen', 'width' => 20 ],
                 ['value' => 'Nombre', 'width' => 40 ],
-                ['value' => 'Categoría', 'width' => 16 ],
-                ['value' => 'UMDNS', 'width' => 15 ],
-                ['value' => 'Descripción', 'width' => 50 ],
-                ['value' => 'Precio', 'width' => 17 ],
+                ['value' => 'Categoria', 'width' => 15 ],
+                ['value' => 'Descripción', 'width' => 80 ],
+                ['value' => 'Precio', 'width' => 20 ],
             ],
             'category' => [
                 'ID',

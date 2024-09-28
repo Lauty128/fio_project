@@ -60,6 +60,50 @@ use Flight;
             }
         }
 
+        static function getAllFull($offset, $limit, $order, array | null $options)
+        {
+            
+        #------------------- CREAR CONSULTA
+            # Creamos la consulta con los parametros recibidos
+            $sql = "SELECT e.* 
+                    FROM equipments e";
+            
+            # Creamos variaciones basadas en la opciones
+            if($options != null){
+                //$sql .= ' '.Util\Queries::getWhere($options);
+            }
+
+            # Ordenar con los datos
+            $sql .= ' '.Util\Queries::defineOrder($order, 'equipments');
+            
+            # Agragar paginacion
+            //$sql .= ' ORDER BY e.equipmentID';
+            $sql .= ' LIMIT :limit OFFSET :offset';
+
+            // Flight::json($sql);
+            // exit();
+        #-------------------- PREPARAR Y EJECUTAR CONSULTA
+            try{
+                # Preparamos la consulta con la cadena generada
+                $query = Config\Database::$connection->prepare($sql);
+    
+                # Definimos los valores de los parametros
+                $query->bindParam(':limit', $limit);
+                $query->bindParam(':offset', $offset);
+                
+                # Ejecutamos la consulta
+                $query->execute();
+                # Obtenemos un array con los datos recibidos
+                $data = $query->fetchAll(PDO::FETCH_ASSOC);
+                
+                # Devolver el valor para usarlo en providers.model.php
+                return $data;
+            }
+            catch(PDOException $error){
+                Config\Config::DefineError('#-001', $error->getMessage());
+            }
+        }
+
         static function getProviders(int $id, int $offset = 0, int $limit = 20)
         {
             

@@ -4,7 +4,7 @@ namespace App\Util\Backup;
 
 //----- Class
 use App\Config;
-use Flight;
+
 //----- Dependencies
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
@@ -104,11 +104,12 @@ class Generator{
             ->setRowHeight(20);
 
             $workSheet->setCellValue('A'.$i, $equipments[$i-2]['id']);
-            $workSheet->setCellValue('B'.$i, $equipments[$i-2]['name']);
-            $workSheet->setCellValue('C'.$i, $equipments[$i-2]['category_id']);
-            $workSheet->setCellValue('D'.$i, $equipments[$i-2]['umdns']);
-            $workSheet->setCellValue('E'.$i, $equipments[$i-2]['description']);
-            $workSheet->setCellValue('F'.$i, $equipments[$i-2]['price']);
+            $workSheet->setCellValue('B'.$i, $equipments[$i-2]['image'] ?? ''); # Imagen
+            $workSheet->setCellValue('C'.$i, $equipments[$i-2]['name']);
+            $workSheet->setCellValue('D'.$i, $equipments[$i-2]['category_id']);
+            $workSheet->setCellValue('E'.$i, $equipments[$i-2]['description'] ?? '');
+            $workSheet->setCellValue('F'.$i, $equipments[$i-2]['price'] ?? '');
+            $workSheet->setCellValue('F'.$i, "");    
         }
 
     }

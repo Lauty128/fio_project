@@ -6,9 +6,13 @@
     use App\Util;
     use App\Model;
     use App\Config;
+    use App\Util\Backup\Generator;
 
-    //-----> Dependencies
+//-----> Dependencies
     use Flight;
+    use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    use PhpOffice\PhpSpreadsheet\IOFactory;
+
 
     class Equipments{
 
@@ -136,6 +140,36 @@
                 Config\Config::DefineError('#-002', 'Las especificaciones del equipo no fueron encontradas');
             }
             
+        }
+
+        static function getTemplate()
+        {
+            $offset = (isset($_GET['offset'])) ? $_GET['offset'] : 0;
+            $limit = (isset($_GET['limit'])) ? $_GET['limit'] : 10;
+
+            $data = Model\Equipments::getAllFull($offset, $limit, 'ID-ASC', null);
+
+            $spreadsheet = new Spreadsheet();
+            $spreadsheet->getProperties()
+                    ->setCreator('ProveeMed')
+                    ->setTitle('Template para actualizar la base de datos');
+
+            # Define la primera pagina y la define como activa
+            $activeSheet = $spreadsheet->getActiveSheet();
+            # Se indica el nombre a la pagina
+            $activeSheet->setTitle('Equipos');
+
+            Generator::header($activeSheet, 'equipment');
+            Generator::writeEquipments($activeSheet, $data);
+
+            # Estas cabeceras permiten configurar la descarga  del archivo
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="ProveeMed.xlsx"');
+        
+            # Esto activa la descarga del archivo desde el navegador.
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save('php://output');
+            exit();
         }
 
     }
