@@ -39,7 +39,7 @@ class Queries{
         if($refer != ''){ $refer .= '.'; }
     
         # Si existe category o equipments agregamos la conexion con la tabla <provider_equipment>
-        $originalSql = (isset($options['equipments']) || isset($options['category'])) ? 'JOIN provider_equipment pe ON pe.providerID = '.$refer.'providerID ' : '';
+        $originalSql = (isset($options['equipments']) || isset($options['category'])) ? 'JOIN provider_equipments pe ON pe.provider_id = '.$refer.'id ' : '';
     
         #-------------- WORD OPTION
         if(isset($options['word']))
@@ -52,8 +52,8 @@ class Queries{
         if(isset($options['category']))
         {
             $category = $options['category'];
-            $sql = "JOIN equipment e ON pe.equipmentID = e.equipmentID 
-                WHERE e.categoryID = ".$category['value'];
+            $sql = "JOIN equipments e ON pe.equipment_id = e.id
+                WHERE e.category_id = ".$category['value'];
         }
     
         #-------------- WORD AND CATEGORY OPTION
@@ -61,8 +61,8 @@ class Queries{
         {
             # Si los dos existen las variables $category y $word ya estaran definidas dentro de los if anteriores 
     
-            $sql = "JOIN equipment e ON pe.equipmentID = e.equipmentID 
-                WHERE e.categoryID = ".$category['value']."
+            $sql = "JOIN equipments e ON pe.equipment_id = e.id
+                WHERE e.category_id = ".$category['value']."
                 AND ".$refer."name COLLATE utf8mb4_unicode_ci LIKE '%".$word['value']."%'";
         }
     
@@ -71,7 +71,7 @@ class Queries{
     
         # Los datos seran agrupados si existe el filtro categoria o equipos, con el fin de no repetir los registros
         if(isset($options['equipments']) || isset($options['category'])){
-            $originalSql .= " GROUP BY ".$refer."providerID";
+            $originalSql .= " GROUP BY ".$refer."id";
         }
     
         return $originalSql;

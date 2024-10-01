@@ -6,7 +6,6 @@
     use App\Util;
     use PDO, PDOException;
     use App\Config;
-use Flight;
 
     #----- Conexion de la base de Datos
     Config\Database::connect();
@@ -26,7 +25,7 @@ use Flight;
             
             # Creamos variaciones basadas en la opciones
             if($options != null){
-                //$sql .= ' '.Util\Queries::getWhere($options);
+                $sql .= ' '.Util\Queries::getWhere($options);
             }
 
             # Ordenar con los datos
@@ -108,11 +107,12 @@ use Flight;
         {
             
             # Creamos la consulta con los parámetros recibidos
-            $sql="SELECT p.providerID, p.name 
-                    FROM provider_equipment pe
-                    JOIN provider p ON pe.providerID = p.providerID
-                    WHERE pe.equipmentID = :id
-                    LIMIT :limit
+            $sql="SELECT p.id, p.name 
+                FROM provider_equipments pe
+                    JOIN users p ON pe.provider_id = p.id
+                WHERE pe.equipment_id = :id AND
+                    p.user_type_id = 3
+                LIMIT :limit
                     OFFSET :offset ";
             try{
                 # Preparamos la consulta con la cadena generada
@@ -140,9 +140,9 @@ use Flight;
         { 
             # reamos la consulta con los parámetros recibidos
             $sql="SELECT e.*, c.name as category
-                FROM equipment e 
-                JOIN category c ON e.categoryID = c.categoryID 
-                WHERE equipmentID = :id";
+                FROM equipments e 
+                JOIN categories c ON e.category_id = c.id 
+                WHERE e.id = :id";
             
             try{
                 # Preparamos la consulta con la cadena generada
@@ -167,9 +167,9 @@ use Flight;
         static function getTotalByProviders(string $id):int | array
         {
             
-            $sql = 'SELECT COUNT(pe.equipmentID) as total FROM equipment e
-            JOIN provider_equipment pe ON e.equipmentID = pe.equipmentID
-            WHERE pe.equipmentID = :id';
+            $sql = 'SELECT COUNT(pe.equipment_id) as total FROM equipments e
+            JOIN provider_equipments pe ON e.id = pe.equipment_id
+            WHERE pe.equipment_id = :id';
             
             try{
                 # Preparamos la consulta

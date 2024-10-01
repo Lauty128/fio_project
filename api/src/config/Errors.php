@@ -25,7 +25,7 @@ class Errors{
             'message'=>'El servidor no ha podido encontrar el endpoint solicitado.',
             'user_error_title' => [
                 'es' => 'Endpoint inexistente',
-                'en' => 'Nonexistent endpoint'
+                'en' => 'Non-existent endpoint'
             ],
             'user_error_message' => [
                 'es' => 'El endpoint solicitado no existe en el servidor',

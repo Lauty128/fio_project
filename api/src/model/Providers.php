@@ -79,12 +79,12 @@
 
         static function getEquipments(int $id, int $offset = 0, int $limit = 20){
             # Creamos la consulta con los parámetros recibidos
-            $sql="SELECT e.equipmentID, e.name, e.categoryID,c.name as category
-                    FROM provider_equipment pe
-                    JOIN equipment e ON pe.equipmentID = e.equipmentID
-                    JOIN category c ON e.categoryID = c.categoryID
-                    WHERE pe.providerID = :id
-                    LIMIT :limit
+            $sql="SELECT e.id, e.name, e.category_id,c.name as category
+                FROM provider_equipments pe
+                    JOIN equipments e ON pe.equipment_id = e.id
+                    JOIN categories c ON e.category_id = c.id
+                WHERE pe.provider_id = :id
+                LIMIT :limit
                     OFFSET :offset ";
             try{
                 $query = Config\Database::$connection->prepare($sql);
@@ -112,7 +112,10 @@
         static function getOne(int $id): Array | bool
         {
             # Creamos la consulta con los parámetros recibidos
-            $sql="SELECT * FROM provider WHERE providerID = :id";
+            $sql = "SELECT * 
+                    FROM users 
+                    WHERE id = :id AND
+                        user_type_id = 3";
 
             try{
                 # Preparamos la consulta con la cadena generada
@@ -140,7 +143,7 @@
             $sql = 'SELECT COUNT(DISTINCT p.id) as total FROM users p';
             
             if(isset($options['category'])){
-                $sql .= " INNER JOIN provider_equipments pe ON pe.providerID = p.providerID
+                $sql .= " INNER JOIN provider_equipments pe ON pe.provider_id = p.id
                 INNER JOIN equipments e ON pe.equipment_id = e.id";
             }
 
@@ -166,7 +169,7 @@
 
         static function getTotalByEquipments(string $id):int | array
         {# Creamos la consulta
-            $sql = 'SELECT COUNT(pe.providerID) as total FROM users p
+            $sql = 'SELECT COUNT(pe.provider_id) as total FROM users p
             JOIN provider_equipments pe ON p.id = pe.provider_id
             WHERE pe.provider_id = :id';
 

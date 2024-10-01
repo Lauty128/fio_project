@@ -151,7 +151,7 @@
 
             $spreadsheet = new Spreadsheet();
             $spreadsheet->getProperties()
-                    ->setCreator('ProveeMed')
+                    ->setCreator('Pems')
                     ->setTitle('Template para actualizar la base de datos');
 
             # Define la primera pagina y la define como activa
@@ -162,9 +162,10 @@
             Generator::header($activeSheet, 'equipment');
             Generator::writeEquipments($activeSheet, $data);
 
+            $nombre = "Pems (" . ($offset + 1) . "-" . ($offset + $limit) . ")" . ".xlsx";
             # Estas cabeceras permiten configurar la descarga  del archivo
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="ProveeMed.xlsx"');
+            header('Content-Disposition: attachment;filename="' . $nombre . '"');
         
             # Esto activa la descarga del archivo desde el navegador.
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');

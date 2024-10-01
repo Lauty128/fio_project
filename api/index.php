@@ -1,13 +1,22 @@
 <?php
+    
     //-------------> Dependencies 
     # Autoload
     require __DIR__ . '/vendor/autoload.php';
+    
+    // $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    // $dotenv->load();
 
     # Configs
     require __DIR__ . '/public/config.php';
     
     //-------------> Global Middlewares
     //Flight::Validate();
+    
+    // use Illuminate\Hashing\BcryptHasher;
+    // $hasher = new BcryptHasher();
+    // var_dump($hasher->check('123', '$2y$10$hH7cOCRaJnG4ki1fdRmuA.KQVyETT8NcE2J5ICZx6oMfU5bYWMIM6'));
+    // exit();
     
     //-------------> Routes
     #-----> Providers

@@ -21,7 +21,7 @@ class Parameters{
                 break;
                 case 'category':
                     $newOptions[$key] = [
-                        'table' => 'e.categoryID',
+                        'table' => 'e.category_id',
                         'value' => $value,
                         'equal' => '='
                     ];

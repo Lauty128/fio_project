@@ -34,11 +34,11 @@
         {
             # Creamos la consulta con los parámetros recibidos
             $sql = 'SELECT DISTINCT c.id, c.name 
-            FROM providers p
-                JOIN providers_equipment pe ON p.providerID = pe.providerID
-                JOIN equipments e ON e.equipment_id = pe.equipment_id
+            FROM users p
+                JOIN provider_equipments pe ON p.id = pe.provider_id
+                JOIN equipments e ON e.id = pe.equipment_id
                 JOIN categories c ON e.category_id = c.id
-            WHERE pe.providerID = :id';
+            WHERE pe.provider_id = :id';
             
             try{
                 # Creamos la consulta con la cadena generada

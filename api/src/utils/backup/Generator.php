@@ -101,12 +101,17 @@ class Generator{
         for ($i=2; $i <= (count($equipments) + 1); $i++)
         { 
             $workSheet->getRowDimension($i)
-            ->setRowHeight(20);
+            ->setRowHeight(80);
+
+            //---> Set style
+            # Salto de linea para ajustar texto en descripcion
+            $workSheet->getStyle('E'.$i)->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP)->setWrapText(true); 
 
             $workSheet->setCellValue('A'.$i, $equipments[$i-2]['id']);
             $workSheet->setCellValue('B'.$i, $equipments[$i-2]['image'] ?? ''); # Imagen
             $workSheet->setCellValue('C'.$i, $equipments[$i-2]['name']);
-            $workSheet->setCellValue('D'.$i, $equipments[$i-2]['category_id']);
+            // $workSheet->setCellValue('D'.$i, $equipments[$i-2]['category_id']);
+            $workSheet->setCellValue('D'.$i, '');
             $workSheet->setCellValue('E'.$i, $equipments[$i-2]['description'] ?? '');
             $workSheet->setCellValue('F'.$i, $equipments[$i-2]['price'] ?? '');
             $workSheet->setCellValue('F'.$i, "");    

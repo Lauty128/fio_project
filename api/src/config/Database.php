@@ -45,7 +45,7 @@
         }
 
         #--------- VARIABLES PARA CONFIGURAR LOS BACKUPS
-        const DROP_TABLES = "#USE fio_project;\n#-------------------- DROPS\nDROP TABLE IF EXISTS provider_equipment;\nDROP TABLE IF EXISTS equipment;\nDROP TABLE IF EXISTS category;\nDROP TABLE IF EXISTS provider;";
+        const DROP_TABLES = "";
 
         const PROVIDERS_STRUCTURE = "CREATE TABLE `provider` (
           `providerID` int(10) NOT NULL,
